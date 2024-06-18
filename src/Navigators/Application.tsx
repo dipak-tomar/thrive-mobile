@@ -6,6 +6,7 @@ import React from 'react';
 import {Box} from 'native-base';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
+import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,7 +17,7 @@ const ApplicationNavigator = () => {
     <NavigationContainer
       ref={navigationRef}
       onReady={() => {
-        //   SplashScreen.hide();
+        SplashScreen.hide();
         // @ts-ignore
         routeNameRef.current = navigationRef.current.getCurrentRoute().name;
       }}
