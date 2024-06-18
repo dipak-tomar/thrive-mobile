@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "568372180864",
+    "project_id": "nocode-livestream-do25tg",
+    "storage_bucket": "nocode-livestream-do25tg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568372180864:android:671148ad81ffe75022b365",
+        "android_client_info": {
+          "package_name": "com.ulearn.thrivemvpver2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAohzhWSKugQsSF6mtmK237CDXAWXgnwbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

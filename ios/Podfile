@@ -18,7 +18,8 @@ end
 
 target 'thrive_mobile' do
   config = use_native_modules!
-  pod 'FirebaseCoreInternal', :modular_headers => true
+  # pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
   pod 'Firebase/Messaging', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   use_react_native!(

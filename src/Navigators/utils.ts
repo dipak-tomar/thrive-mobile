@@ -5,7 +5,7 @@ import {
 
 export type RootStackParamList = {
   Login: undefined;
-  Main: undefined;
+  Signup: undefined;
 };
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();

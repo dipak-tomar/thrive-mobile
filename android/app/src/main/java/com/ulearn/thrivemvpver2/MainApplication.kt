@@ -1,4 +1,4 @@
-package com.thrive_mobile
+package com.ulearn.thrivemvpver2
 
 import android.app.Application
 import com.facebook.react.PackageList
