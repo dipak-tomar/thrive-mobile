@@ -6,6 +6,11 @@ import {
 export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
+  Preference: undefined;
+  SelectPreferences: undefined;
+  Notifications: undefined;
+  Profile: undefined;
+  ContinueScreen: {fromLogin: boolean};
 };
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
