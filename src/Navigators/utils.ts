@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/native';
 
 export type RootStackParamList = {
+  Main: undefined;
   Login: undefined;
   Signup: undefined;
   Preference: undefined;

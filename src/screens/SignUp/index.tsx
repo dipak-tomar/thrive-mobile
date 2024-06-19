@@ -3,11 +3,34 @@ import {Box, Checkbox, HStack, Input, Text, VStack} from 'native-base';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import {TouchableOpacity} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
+import auth from '@react-native-firebase/auth';
+import {navigate} from '../../Navigators/utils';
 
 const SignUp = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const signUpUser = async () => {
+    try {
+      const response = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      await response.user.updateProfile({
+        displayName: fullName,
+      });
+      navigate('Main', {});
+      console.log('User account created & signed in!', response);
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        console.log('That email address is already in use!');
+      } else if (error.code === 'auth/invalid-email') {
+        console.log('That email address is invalid!');
+      } else {
+        console.error(error);
+      }
+    }
+  };
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
@@ -127,6 +150,7 @@ const SignUp = () => {
         </Checkbox>
       </HStack>
       <TouchableOpacity
+        onPress={() => signUpUser()}
         style={{
           backgroundColor: '#31006F',
           width: '85%',

@@ -2,7 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {Platform, StatusBar} from 'react-native';
 import {navigationRef} from './utils';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box} from 'native-base';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
@@ -12,11 +12,28 @@ import SelectPreferences from '../screens/Preferences/SelectPreferences';
 import Notifications from '../screens/Notifications';
 import Profile from '../screens/Profile';
 import ContinueScrren from '../screens/Login/ContinueScrren';
+import auth from '@react-native-firebase/auth';
+import Main from './Main';
 
 const Stack = createNativeStackNavigator();
 
 const ApplicationNavigator = () => {
   const routeNameRef = React.useRef();
+
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
 
   return (
     <NavigationContainer
@@ -45,12 +62,20 @@ const ApplicationNavigator = () => {
       />
 
       <Stack.Navigator
-        initialRouteName={'ContinueScreen'}
+        initialRouteName={'Login'}
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="Login" component={Login} />
+        {user && <Stack.Screen name="Login" component={Login} />}
         <Stack.Screen name="Signup" component={SignUp} />
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{
+            gestureEnabled: false, // Disable gestures on this screen
+          }}
+        />
+
         <Stack.Screen name="Preference" component={Preference} />
         <Stack.Screen name="SelectPreferences" component={SelectPreferences} />
         <Stack.Screen name="Notifications" component={Notifications} />

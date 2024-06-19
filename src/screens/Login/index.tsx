@@ -3,11 +3,34 @@ import {Box, Checkbox, HStack, Input, Text, VStack} from 'native-base';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import {TouchableOpacity} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
+import auth from '@react-native-firebase/auth';
+import {navigate} from '../../Navigators/utils';
 
 const Login = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const signInUser = async () => {
+    try {
+      const response = await auth().signInWithEmailAndPassword(email, password);
+      console.log('User signed in!', response);
+      if (response) {
+        navigate('Main', {});
+      }
+    } catch (error) {
+      if (error.code === 'auth/user-not-found') {
+        console.log('No user found with that email address!');
+      } else if (error.code === 'auth/wrong-password') {
+        console.log('Incorrect password!');
+      } else if (error.code === 'auth/invalid-email') {
+        console.log('Invalid email address!');
+      } else {
+        console.log(error.message);
+      }
+    }
+  };
+
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
@@ -79,6 +102,7 @@ const Login = () => {
       </VStack>
 
       <TouchableOpacity
+        onPress={() => signInUser()}
         style={{
           backgroundColor: '#31006F',
           width: '85%',
