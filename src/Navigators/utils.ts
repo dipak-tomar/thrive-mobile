@@ -12,6 +12,7 @@ export type RootStackParamList = {
   Notifications: undefined;
   Profile: undefined;
   ContinueScreen: {fromLogin: boolean};
+  Home: undefined;
 };
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();

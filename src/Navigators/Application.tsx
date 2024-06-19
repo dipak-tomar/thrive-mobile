@@ -14,6 +14,7 @@ import Profile from '../screens/Profile';
 import ContinueScrren from '../screens/Login/ContinueScrren';
 import auth from '@react-native-firebase/auth';
 import Main from './Main';
+import Home from '../screens/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,7 +63,7 @@ const ApplicationNavigator = () => {
       />
 
       <Stack.Navigator
-        initialRouteName={'Login'}
+        initialRouteName={'Home'}
         screenOptions={{
           headerShown: false,
         }}>
@@ -81,6 +82,7 @@ const ApplicationNavigator = () => {
         <Stack.Screen name="Notifications" component={Notifications} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="ContinueScreen" component={ContinueScrren} />
+        <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   );
