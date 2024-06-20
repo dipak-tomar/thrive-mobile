@@ -64,20 +64,25 @@ const Main = () => {
             py={1}
             borderRadius={'full'}
             backgroundColor={focused ? '#f0e5ff' : 'white'}>
-            <HomeIcon />
+            <HomeIcon height={29} width={29} />
           </Box>
         ) : (
-          <HomeIcon />
+          <HomeIcon height={29} width={29} />
         );
       } else if (route.name === 'Profile') {
-        return (
-          <Pressable
-            onPress={() => {
-              navigate('Profile', {});
-            }}>
-            <ProfileIcon />
-          </Pressable>
-        );
+        return focused ?
+        (<Box
+        w={'65%'}
+        alignItems={'center'}
+        justifyContent={'center'}
+        py={1}
+        borderRadius={'full'}
+        backgroundColor={focused ? '#f0e5ff' : 'white'}>
+        <ProfileIcon height={29} width={29} />
+      </Box> 
+      ) :(
+        <ProfileIcon height={29} width={29} />
+      );
       } else if (route.name === 'Progress') {
         return focused ? (
           <Box
@@ -87,10 +92,10 @@ const Main = () => {
             py={1}
             borderRadius={'full'}
             backgroundColor={focused ? '#f0e5ff' : 'white'}>
-            <ProgressIcon />
+            <ProgressIcon height={29} width={29} />
           </Box>
         ) : (
-          <ProgressIcon />
+          <ProgressIcon height={29} width={29} />
         );
       } else if (route.name === 'Help') {
         return focused ? (
@@ -101,10 +106,10 @@ const Main = () => {
             py={1}
             borderRadius={'full'}
             backgroundColor={focused ? '#f0e5ff' : 'white'}>
-            <HelpIcon />
+            <HelpIcon height={29} width={29} />
           </Box>
         ) : (
-          <HelpIcon />
+          <HelpIcon height={29} width={29} />
         );
       }
       return <Ionicons name={iconName} size={size} color={color} />;
@@ -116,7 +121,7 @@ const Main = () => {
             <Text
               fontWeight={focused ? 700 : 400}
               color={focused ? '#31006F' : '#5C6873'}
-              fontSize={12}>
+              fontSize={10}>
               Home
             </Text>
           </Box>
@@ -128,7 +133,7 @@ const Main = () => {
             <Text
               fontWeight={focused ? 700 : 400}
               color={focused ? '#31006F' : '#5C6873'}
-              fontSize={12}>
+              fontSize={10}>
               Profile
             </Text>
           </Box>
@@ -140,7 +145,7 @@ const Main = () => {
             <Text
               fontWeight={focused ? 700 : 400}
               color={focused ? '#31006F' : '#5C6873'}
-              fontSize={12}>
+              fontSize={10}>
               Progress
             </Text>
           </Box>
@@ -152,7 +157,7 @@ const Main = () => {
             <Text
               fontWeight={focused ? 700 : 400}
               color={focused ? '#31006F' : '#5C6873'}
-              fontSize={12}>
+              fontSize={10}>
               Help
             </Text>
           </Box>

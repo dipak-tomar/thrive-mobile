@@ -24,12 +24,15 @@ import RNRestart from 'react-native-restart';
 import auth from '@react-native-firebase/auth';
 import {getItem} from '../../config/asyncStorage';
 import {useIsFocused} from '@react-navigation/native';
+import { useWindowDimensions } from 'react-native';
 
 const Profile = () => {
   const [Loading, setLoading] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const isFocused = useIsFocused();
   const [user, setuser] = useState({});
+  const height = useWindowDimensions().height;
+  const width = useWindowDimensions().width;
 
   useEffect(() => {
     async function getCurrentUser() {
@@ -68,16 +71,20 @@ const Profile = () => {
 
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
-        <HStack>
+      <HStack width={width} mt={'4%'} px={'4%'} alignItems={'center'} alignSelf={'center'} >
+        <HStack alignItems={'center'} >
           <ThriveLogo />
           <Text
             color={'#31006F'}
-            fontSize={35}
+            fontSize={32}
             fontWeight={fontWeights['700']}
             fontFamily={fonts.Poppins['700']}
-            ml={'4%'}>
-            Profile{' '}
+            lineHeight={34}
+            mt={'2%'}
+            ml={'4%'}
+            
+            >
+            Profile
           </Text>
         </HStack>
       </HStack>
