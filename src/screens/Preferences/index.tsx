@@ -26,18 +26,20 @@ import MedicalIcon from '../../Assets/MedicalIcon.svg';
 import AskingIcon from '../../Assets/AskingIcon.svg';
 import {navigate} from '../../Navigators/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Loader} from '../../components/Loader';
 
 const Preference = () => {
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [medicalCondition, setMedicalCondition] = useState('');
-  const [step, setStep] = useState(5);
+  const [step, setStep] = useState(0);
   const {height, width} = useWindowDimensions();
   const [heightSliderValue, setHeightSliderValue] = useState(0);
   const [weightSliderValue, setWeightSliderValue] = useState(0);
   const [primaryGoals, setprimaryGoals] = useState([]);
   const [habbits, sethabbits] = useState([]);
   const [timesOfTheDay, settimesOfTheDay] = useState('');
+  const [loading, setloading] = useState(false);
   const genderOptions = [
     {text: 'Male', icon: <MaleIcon />},
     {text: 'Female', icon: <FemaleIcon />},
@@ -52,6 +54,7 @@ const Preference = () => {
       }, 2000);
     }
   }, [step]);
+
   async function callRespellAPI() {
     const url = 'https://api.respell.ai/v1/run';
     const headers = {
@@ -63,7 +66,6 @@ const Preference = () => {
     const body = JSON.stringify({
       spellId: 'XqhY2Hmp0tJeoGn7_tS5I',
       spellVersionId: 'knMeqZ0260NQ3MWFOIZh8',
-
       inputs: {
         height: Math.floor(heightSliderValue),
         weight: Math.floor(weightSliderValue),
@@ -78,77 +80,104 @@ const Preference = () => {
       },
     });
 
+    setloading(true);
     const habbitsData = [
       {
-        title: 'Practice deep breathing exercises',
+        title: 'Mindful Walking Break',
         action:
-          'Practice deep breathing exercises for 5 minutes in the morning to help manage Asthma symptoms and promote relaxation.',
-        suggested_time: '6:30 AM',
+          'Take a 10-minute walk outside, focus on your surroundings, and practice deep breathing to alleviate anxiety and boost mood.',
+        suggested_time: '2:30 PM',
       },
       {
-        title: 'Prepare a nutritious breakfast',
+        title: 'Bodyweight Workout',
         action:
-          'Prepare a balanced breakfast with whole grains, protein, and fruits in the morning to kickstart your day with energy and focus.',
-        suggested_time: '8:00 AM',
+          'Do a quick 15-minute bodyweight workout focusing on squats, push-ups, and planks to build strength and improve mood.',
+        suggested_time: '1:00 PM',
       },
       {
-        title: 'Go for a light walk',
+        title: 'Healthy Snack Preparation',
         action:
-          'Go for a light 15-minute walk in the morning to boost circulation, improve lung function, and enhance overall mood.',
-        suggested_time: '9:30 AM',
+          'Prepare a nutritious snack like fruit salad or nuts to fuel your body and improve concentration levels.',
+        suggested_time: '2:00 PM',
       },
       {
-        title: 'Stretch for flexibility',
+        title: 'Deep Breathing Exercise',
         action:
-          'Engage in a 10-minute stretching routine in the morning to improve flexibility, reduce stiffness, and prevent injuries during exercise.',
-        suggested_time: '10:30 AM',
+          'Practice deep breathing for 5 minutes to calm your mind, reduce anxiety, and enhance focus for the rest of the day.',
+        suggested_time: '2:45 PM',
       },
       {
-        title: 'Hydrate with water',
+        title: 'Posture Check Reminder',
         action:
-          'Drink a glass of water every hour in the morning to stay hydrated, improve digestion, and support overall well-being.',
-        suggested_time: '5:00 AM - 11:00 AM',
+          'Set a reminder to check and correct your posture every hour to prevent muscle tension and reduce stress levels.',
+        suggested_time: '12:30 PM',
       },
       {
-        title: 'Mindful breathing session',
+        title: 'Hydration Reminder',
         action:
-          'Take 5 minutes for a mindful breathing session in the morning to increase awareness, reduce stress, and enhance mental clarity.',
-        suggested_time: '7:00 AM',
+          'Drink a glass of water every hour to stay hydrated, boost energy levels, and support overall well-being.',
+        suggested_time: '12:00 PM',
       },
       {
-        title: 'Plan your workout',
+        title: 'Gratitude Journaling',
         action:
-          'Spend 10 minutes planning your exercise routine for the day in the morning to set clear goals and stay motivated.',
-        suggested_time: '8:30 AM',
+          'Take 5 minutes to write down three things you are grateful for to promote positivity and reduce anxiety levels.',
+        suggested_time: '2:15 PM',
       },
       {
-        title: 'Posture check',
+        title: 'Anxiety Relief Stretch',
         action:
-          'Check your posture every hour in the morning to maintain spinal alignment, prevent back pain, and improve breathing patterns.',
-        suggested_time: '5:00 AM - 11:00 AM',
+          'Perform gentle stretches for 10 minutes to release tension, relax muscles, and alleviate symptoms of anxiety.',
+        suggested_time: '3:00 PM',
       },
     ];
-    // await AsyncStorage.setItem('habbitsData', JSON.stringify(habbitsData));
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: body,
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      await AsyncStorage.setItem(
-        'habbitsData',
-        JSON.stringify(data?.outputs?.micro_habit_1),
-      );
-      console.log('Response data:', habbitsData);
-    } catch (error) {
-      console.error('Error:', error);
+      await AsyncStorage.setItem('habbitsData', JSON.stringify(habbitsData));
+      console.log('Data saved to AsyncStorage successfully.');
+      setStep(prev => prev + 1);
+      setloading(false);
+    } catch (storageError) {
+      console.error('Error saving data to AsyncStorage:', storageError);
+      setloading(false);
     }
+    // try {
+    //   const response = await fetch(url, {
+    //     method: 'POST',
+    //     headers: headers,
+    //     body: body,
+    //   });
+
+    //   if (!response.ok) {
+    //     throw new Error(`HTTP error! Status: ${response.status}`);
+    //   }
+
+    //   const data = await response.json();
+    //   console.log('Response data:', data);
+
+    //   // Check the structure of the data before attempting to store it
+    //   if (data && data.outputs && data.outputs.micro_habit_1) {
+    //     const microHabits = data.outputs.micro_habit_1;
+    //     console.log('Micro habits to save:', microHabits);
+
+    //     try {
+    //       await AsyncStorage.setItem(
+    //         'habbitsData',
+    //         JSON.stringify(microHabits),
+    //       );
+    //       console.log('Data saved to AsyncStorage successfully.');
+    //       setStep(prev => prev + 1);
+    //     } catch (storageError) {
+    //       console.error('Error saving data to AsyncStorage:', storageError);
+    //     }
+    //   } else {
+    //     console.error('Unexpected data structure:', data);
+    //   }
+
+    //   setloading(false);
+    // } catch (error) {
+    //   setloading(false);
+    //   console.error('Error:', error);
+    // }
   }
 
   const handlePressGoals = (question: string) => {
@@ -500,8 +529,7 @@ const Preference = () => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  // callRespellAPI();
-                  setStep(prev => prev + 1);
+                  callRespellAPI();
                 }}
                 style={{
                   backgroundColor: '#31006F',
@@ -549,6 +577,7 @@ const Preference = () => {
             </TouchableOpacity>
           </HStack>
         )}
+        {loading ? <Loader /> : null}
       </ScrollView>
     </Box>
   );

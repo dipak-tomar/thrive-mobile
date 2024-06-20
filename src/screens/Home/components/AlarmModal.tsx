@@ -25,49 +25,9 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
     {day: 'F', dayName: 'Fri'},
     {day: 'S', dayName: 'Sat'},
   ];
-  const nowDate = () => {
-    const d = new Date();
-    let second = d.getSeconds();
-    let minute = d.getMinutes();
-    let hour = d.getHours();
-    return {second, minute, hour};
-  };
 
-  const useNowTimer = () => {
-    const [time, setTime] = useState(nowDate());
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setTime(nowDate());
-      }, 1000);
-
-      return () => clearInterval(intervalId); // Cleanup interval on unmount
-    }, []);
-
-    return time;
-  };
   const toggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
-  // const handleDayPress = day => {
-  //   setSelectedDays(prevSelectedDays =>
-  //     prevSelectedDays.includes(day)
-  //       ? prevSelectedDays.filter(d => d !== day)
-  //       : [...prevSelectedDays, day],
-  //   );
-  // };
-  let options = {
-    width: '300px',
-    border: true,
-    borderColor: '#2e2e2e',
-    baseColor: '#17a2b8',
-    centerColor: '#459cff',
-    centerBorderColor: '#ffffff',
-    handColors: {
-      second: '#d81c7a',
-      minute: '#ffffff',
-      hour: '#ffffff',
-    },
-  };
   const handleSelect = (dayName: string) => {
     setSelectedDays(prevSelectedDays =>
       prevSelectedDays.includes(dayName)
@@ -75,8 +35,6 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
         : [...prevSelectedDays, dayName],
     );
   };
-  console.log('selectedDays=>', selectedDays.includes('Sun'), selectedDays);
-  const {second, minute, hour} = useNowTimer();
 
   return (
     <Modal isOpen={isModalVisible} onClose={closeModal} size="lg">
@@ -85,9 +43,8 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
         borderRadius={20}
         borderWidth={1}
         borderColor={'#31006F'}>
-        {/* <Modal.CloseButton /> */}
-
-        <Modal.Body>
+        <Modal.CloseButton />
+        <Modal.Body mt={'6%'}>
           <Box bgColor={'#F6F0FF'} my={'2%'}>
             <HStack
               px={'2%'}
@@ -121,7 +78,7 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
                 //     selectedDays.includes(day) && styles.selectedDayButton,
                 //   ]}>
                 <TouchableOpacity
-                  onPress={item => {
+                  onPress={() => {
                     handleSelect(item.dayName);
                   }}>
                   <Box
@@ -165,7 +122,7 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
                 colorHour="#1400FF"
                 colorMinutes="#807D7D"
                 colorSeconds="#FF74E9"
-                borderColor="#0000FF" 
+                borderColor="#0000FF"
                 numberFontSize={20}
                 // hour={hour}
                 // minutes={minute}

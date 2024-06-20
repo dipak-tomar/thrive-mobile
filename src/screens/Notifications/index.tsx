@@ -7,11 +7,34 @@ import {
   Text,
   VStack,
 } from 'native-base';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import DashedVerticalLine from '../../Assets/DashedVerticalLine.svg';
 import BookOpen from '../../Assets/BookOpen.svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Loader} from '../../components/Loader';
 const Notifications = () => {
+  const [data, setdata] = useState();
+  const [loading, setloading] = useState(false);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    setloading(true);
+    const notify = await AsyncStorage.getItem('notification');
+    if (notify) {
+      const pasredNotify = JSON.parse(notify ? notify : '');
+      setdata(pasredNotify);
+    }
+    setTimeout(() => {
+      setloading(false);
+    }, 2000);
+
+    console.log('notification.js', notify);
+  };
+
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack
@@ -76,6 +99,7 @@ const Notifications = () => {
             );
           })}
         </Box>
+        {loading ? <Loader /> : null}
       </ScrollView>
     </Box>
   );

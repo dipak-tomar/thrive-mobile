@@ -24,16 +24,66 @@ const Home = () => {
   const [openReminder, setOpenReminder] = useState(false);
 
   const preferences = [
-    'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
-    'Stretch for 10 minutes in the evening to improve flexibility and relax your muscles. It can help manage stress and support blood sugar control.',
-    'Practice mindful eating habits during dinner time to manage diabetes better. Focus on chewing slowly and savoring each bite.',
+    {
+      title: 'Practice deep breathing exercises',
+      action:
+        'Practice deep breathing exercises for 5 minutes in the morning to help manage Asthma symptoms and promote relaxation.',
+      suggested_time: '6:30 AM',
+    },
+    {
+      title: 'Prepare a nutritious breakfast',
+      action:
+        'Prepare a balanced breakfast with whole grains, protein, and fruits in the morning to kickstart your day with energy and focus.',
+      suggested_time: '8:00 AM',
+    },
+    {
+      title: 'Go for a light walk',
+      action:
+        'Go for a light 15-minute walk in the morning to boost circulation, improve lung function, and enhance overall mood.',
+      suggested_time: '9:30 AM',
+    },
+    {
+      title: 'Stretch for flexibility',
+      action:
+        'Engage in a 10-minute stretching routine in the morning to improve flexibility, reduce stiffness, and prevent injuries during exercise.',
+      suggested_time: '10:30 AM',
+    },
+    {
+      title: 'Hydrate with water',
+      action:
+        'Drink a glass of water every hour in the morning to stay hydrated, improve digestion, and support overall well-being.',
+      suggested_time: '5:00 AM - 11:00 AM',
+    },
+    {
+      title: 'Mindful breathing session',
+      action:
+        'Take 5 minutes for a mindful breathing session in the morning to increase awareness, reduce stress, and enhance mental clarity.',
+      suggested_time: '7:00 AM',
+    },
+    {
+      title: 'Plan your workout',
+      action:
+        'Spend 10 minutes planning your exercise routine for the day in the morning to set clear goals and stay motivated.',
+      suggested_time: '8:30 AM',
+    },
+    {
+      title: 'Posture check',
+      action:
+        'Check your posture every hour in the morning to maintain spinal alignment, prevent back pain, and improve breathing patterns.',
+      suggested_time: '5:00 AM - 11:00 AM',
+    },
   ];
-  const [selectedPreference, setselectedPreference] = useState({
-    isChecked: false,
-    selected: preferences[0],
-  });
+  const [selectedPreferences, setSelectedPreferences] = useState([]);
   console.log('ischecked', isChecked);
-
+  const togglePreference = preference => {
+    setSelectedPreferences(prevSelected => {
+      if (prevSelected.includes(preference.action)) {
+        return prevSelected.filter(item => item !== preference.action);
+      } else {
+        return [...prevSelected, preference.action];
+      }
+    });
+  };
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack
@@ -63,7 +113,7 @@ const Home = () => {
           </Pressable>
         </HStack>
       </HStack>
-      <ScrollView>
+      <ScrollView bounces={false}>
         <Text
           color={'#31006F'}
           fontSize={22}
@@ -73,6 +123,7 @@ const Home = () => {
           Hey Aman!👋🏼
         </Text>
         {preferences?.map(preference => {
+          const isChecked = selectedPreferences.includes(preference.action);
           return (
             <HStack alignItems={'center'}>
               <Pressable
@@ -80,25 +131,19 @@ const Home = () => {
                 mt={'8%'}
                 // bgColor={'green.400'}
                 w={'15%'}
-                onPress={() =>
-                  setselectedPreference(prev => ({
-                    isChecked: !prev.isChecked,
-                    selected: preference,
-                  }))
-                }>
+                onPress={() => togglePreference(preference)}>
                 <Box>
                   <CheckboxUnChecked width={40} height={40} />
-                  {selectedPreference?.isChecked &&
-                    selectedPreference?.selected === preference && (
-                      <Box
-                        position="absolute"
-                        top={-4}
-                        left={2}
-                        width={40}
-                        height={40}>
-                        <CheckMark />
-                      </Box>
-                    )}
+                  {isChecked && (
+                    <Box
+                      position="absolute"
+                      top={-4}
+                      left={2}
+                      width={40}
+                      height={40}>
+                      <CheckMark />
+                    </Box>
+                  )}
                 </Box>
                 <Text
                   //   width={'60%'}
@@ -130,20 +175,46 @@ const Home = () => {
                     lineHeight={24}
                     fontWeight={fontWeights['600']}
                     fontFamily={fonts.NunitoSans['600']}>
-                    {preference}
+                    {preference.title}
                   </Text>
+                  <Text
+                    color={'gray.500'}
+                    fontSize={16}
+                    textAlign={'justify'}
+                    lineHeight={24}
+                    mt={'4%'}
+                    fontWeight={fontWeights['400']}
+                    fontFamily={fonts.NunitoSans['400']}>
+                    {preference.action}
+                  </Text>
+
                   <Pressable onPress={() => setOpenReminder(true)}>
-                    <HStack justifyContent={'flex-end'}>
+                    <HStack
+                      justifyContent={'space-between'}
+                      alignItems={'center'}>
                       <Text
                         color={'#31006F'}
-                        fontSize={12}
-                        lineHeight={16}
-                        fontWeight={fontWeights['600']}
-                        fontFamily={fonts.NunitoSans['600']}
-                        underline>
-                        Set Reminder
+                        fontSize={16}
+                        textAlign={'justify'}
+                        lineHeight={24}
+                        mt={'4%'}
+                        w={'50%'}
+                        fontWeight={fontWeights['400']}
+                        fontFamily={fonts.NunitoSans['400']}>
+                        {preference.suggested_time}
                       </Text>
-                      <Icon as={IonIcons} name="alarm-outline" ml={'1%'} />
+                      <HStack alignItems={'center'} mt={'5%'}>
+                        <Text
+                          color={'#31006F'}
+                          fontSize={16}
+                          lineHeight={16}
+                          fontWeight={fontWeights['600']}
+                          fontFamily={fonts.NunitoSans['600']}
+                          underline>
+                          Set Reminder
+                        </Text>
+                        <Icon as={IonIcons} name="alarm-outline" ml={'1%'} />
+                      </HStack>
                     </HStack>
                   </Pressable>
                 </VStack>
@@ -151,8 +222,12 @@ const Home = () => {
             </HStack>
           );
         })}
+        <Box h={50} />
       </ScrollView>
-      <AlarmModal isModalVisible={openReminder} closeModal={!openReminder} />
+      <AlarmModal
+        isModalVisible={openReminder}
+        closeModal={() => setOpenReminder(prev => !prev)}
+      />
     </Box>
   );
 };

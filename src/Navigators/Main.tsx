@@ -16,6 +16,7 @@ import {navigate} from './utils';
 import Profile from '../screens/Profile';
 import Login from '../screens/Login';
 import Home from '../screens/Home';
+import ProgressScreen from '../screens/Progress/ProgressScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -210,7 +211,7 @@ const Main = () => {
 
       <Tab.Screen
         name="Progress"
-        component={Login}
+        component={ProgressScreen}
         listeners={{
           focus: e => {
             console.log('focus', e.target?.split('-')[0]);

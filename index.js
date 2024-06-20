@@ -15,13 +15,6 @@ messaging().setBackgroundMessageHandler(
   async remoteMessage => await handleMessagesofPushNotifictions(remoteMessage),
 );
 
-// const getFcmToken = async() =>{
-
-//   const fcmToken = await messaging().getToken()
-//   console.log('FCM Token:', fcmToken)
-
-// } 
-// getFcmToken()
 export const handleMessagesofPushNotifictions = async remoteMessage => {
   console.log('remote::', remoteMessage);
   // return

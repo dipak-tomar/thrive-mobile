@@ -5,12 +5,16 @@ import {TouchableOpacity} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
 import auth from '@react-native-firebase/auth';
 import {navigate} from '../../Navigators/utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Loader} from '../../components/Loader';
 
 const SignUp = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setloading] = useState(false);
   const signUpUser = async () => {
+    setloading(true);
     try {
       const response = await auth().createUserWithEmailAndPassword(
         email,
@@ -19,14 +23,19 @@ const SignUp = () => {
       await response.user.updateProfile({
         displayName: fullName,
       });
+      await AsyncStorage.setItem('currentUser', JSON.stringify(response.user));
       navigate('Main', {});
       console.log('User account created & signed in!', response);
+      setloading(false);
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
+        setloading(false);
         console.log('That email address is already in use!');
       } else if (error.code === 'auth/invalid-email') {
+        setloading(false);
         console.log('That email address is invalid!');
       } else {
+        setloading(false);
         console.error(error);
       }
     }
@@ -172,12 +181,14 @@ const SignUp = () => {
           <Text
             color={'black'}
             fontSize={14}
+            onPress={() => navigate('Login', {})}
             fontWeight={fontWeights['500']}
             fontFamily={fonts.Poppins['500']}>
             SIGN IN
           </Text>
         </Text>
       </Box>
+      {loading ? <Loader /> : null}
     </Box>
   );
 };

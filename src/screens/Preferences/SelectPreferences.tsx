@@ -11,48 +11,57 @@ import CheckMark from '../../Assets/CheckMark.svg';
 import {navigate} from '../../Navigators/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Feather from 'react-native-vector-icons/Feather';
+import {useIsFocused} from '@react-navigation/native';
+import {Loader} from '../../components/Loader';
 const SelectPreferences = () => {
   const [isChecked, setisChecked] = useState(false);
-
+  const [Loading, setLoading] = useState(false);
   const [microHabbits, setmicroHabbits] = useState([]);
-
+  const isFocused = useIsFocused();
   const preferences = [
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
     'Practice mindful eating habits during dinner time to manage diabetes better. Focus on chewing slowly and savoring each bite.',
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
   ];
-  const [selectedPreference, setselectedPreference] = useState({
-    isChecked: false,
-    selected: preferences[0],
-  });
+  const [selectedPreferences, setSelectedPreferences] = useState([]);
   console.log('ischecked', isChecked);
 
   useEffect(() => {
-    getHabitsData();
-  }, []);
-  const getHabitsData = async () => {
-    try {
-      const storedHabitsData = await AsyncStorage.getItem('habitsData');
+    async function getMicroHabbits() {
+      setLoading(true);
+      try {
+        const habbitsString = await AsyncStorage.getItem('habbitsData');
+        if (habbitsString !== null) {
+          const habbitsInfo = JSON.parse(habbitsString);
 
-      if (storedHabitsData !== null) {
-        // Parse the JSON string back to an array
-        const habitsData = JSON.parse(storedHabitsData);
-
-        console.log('Retrieved habits data:', habitsData);
-
-        // You can now use the habitsData array in your application
-        setmicroHabbits(habitsData);
-      } else {
-        console.log('No habits data found in AsyncStorage');
-        return null;
+          setmicroHabbits(habbitsInfo);
+          console.log('Data retrieved from AsyncStorage', habbitsInfo);
+        } else {
+          setmicroHabbits([]); // Ensure microHabbits is an array if there's no data
+        }
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+      } catch (error) {
+        console.error('Error retrieving data from AsyncStorage', error);
+        setmicroHabbits([]); // Ensure microHabbits is an array in case of error
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error retrieving habits data from AsyncStorage:', error);
-      return null;
     }
-  };
 
+    getMicroHabbits();
+  }, [isFocused]);
+  const togglePreference = preference => {
+    setSelectedPreferences(prevSelected => {
+      if (prevSelected.includes(preference.action)) {
+        return prevSelected.filter(item => item !== preference.action);
+      } else {
+        return [...prevSelected, preference.action];
+      }
+    });
+  };
   const habbitsData = [
     {
       title: 'Practice deep breathing exercises',
@@ -137,31 +146,27 @@ const SelectPreferences = () => {
           mt={'2%'}>
           Hey Aman!👋🏼
         </Text>
-        {habbitsData?.map(preference => {
+        {microHabbits.length === 0 && <Text>No habbits available</Text>}
+        {microHabbits?.map(preference => {
+          const isChecked = selectedPreferences.includes(preference.action);
           return (
             <HStack alignItems={'center'}>
               <Pressable
                 ml={'3%'}
                 mt={'8%'}
-                onPress={() =>
-                  setselectedPreference(prev => ({
-                    isChecked: !prev.isChecked,
-                    selected: preference?.action,
-                  }))
-                }>
+                onPress={() => togglePreference(preference)}>
                 <Box>
                   <CheckboxUnChecked width={40} height={40} />
-                  {selectedPreference?.isChecked &&
-                    selectedPreference?.selected === preference?.action && (
-                      <Box
-                        position="absolute"
-                        top={-4}
-                        left={2}
-                        width={40}
-                        height={40}>
-                        <CheckMark />
-                      </Box>
-                    )}
+                  {isChecked && (
+                    <Box
+                      position="absolute"
+                      top={-4}
+                      left={2}
+                      width={40}
+                      height={40}>
+                      <CheckMark />
+                    </Box>
+                  )}
                 </Box>
               </Pressable>
 
@@ -199,6 +204,7 @@ const SelectPreferences = () => {
           }}>
           <Icon as={Feather} name="arrow-right" color={'#fff'} />
         </TouchableOpacity>
+        {Loading ? <Loader /> : null}
       </ScrollView>
     </Box>
   );

@@ -9,7 +9,7 @@ import {
   Text,
   VStack,
 } from 'native-base';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import ToggleSwitch from '../../components/ToggleSwitch';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -18,8 +18,54 @@ import {fontWeights, fonts} from '../../config/fonts.config';
 import PrivacyIcon from '../../Assets/PrivacyIcon.svg';
 import NotificationIcon from '../../Assets/Notification.svg';
 import LeftArrow from '../../Assets/LeftArrow.svg';
+import {navigate} from '../../Navigators/utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart';
+import auth from '@react-native-firebase/auth';
+import {getItem} from '../../config/asyncStorage';
+import {useIsFocused} from '@react-navigation/native';
+
 const Profile = () => {
+  const [Loading, setLoading] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const isFocused = useIsFocused();
+  const [user, setuser] = useState({});
+
+  useEffect(() => {
+    async function getCurrentUser() {
+      setLoading(true);
+      try {
+        const userString = await AsyncStorage.getItem('currentUser');
+        if (userString) {
+          const userInfo = JSON.parse(userString);
+          setuser(userInfo);
+          console.log('User retrieved from AsyncStorage', userInfo);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Error retrieving user from AsyncStorage', error);
+        setLoading(false);
+      }
+    }
+    getCurrentUser();
+  }, [isFocused]);
+
+  const handleLogout = async () => {
+    setLoading(true);
+    try {
+      await AsyncStorage.clear();
+      auth()
+        .signOut()
+        .then(() => console.log('User signed out!'));
+      RNRestart.Restart();
+      navigate('Login', {});
+    } catch (error) {
+      console.error('Error occurred during logout:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
@@ -62,7 +108,7 @@ const Profile = () => {
               lineHeight={21}
               fontWeight={fontWeights['500']}
               fontFamily={fonts.Poppins['500']}>
-              AMAN
+              {user?.displayName ?? ''}
             </Text>
             <Text
               color={'#7B6F72'}
@@ -70,7 +116,7 @@ const Profile = () => {
               lineHeight={18}
               fontWeight={fontWeights['400']}
               fontFamily={fonts.Poppins['400']}>
-              amandewangan@gmailcom
+              {user?.email ?? ''}
             </Text>
           </VStack>
         </HStack>
@@ -182,7 +228,10 @@ const Profile = () => {
             </Box>
           </HStack>
         </Box>
-        <Pressable mt={'5%'} alignSelf={'center'}>
+        <Pressable
+          mt={'5%'}
+          alignSelf={'center'}
+          onPress={() => handleLogout()}>
           <Text>LOG OUT</Text>
         </Pressable>
       </ScrollView>

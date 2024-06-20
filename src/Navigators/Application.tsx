@@ -18,6 +18,9 @@ import Home from '../screens/Home';
 
 import messaging from '@react-native-firebase/messaging';
 import ProgressScreen from '../screens/Progress/ProgressScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {handleMessagesofPushNotifictions} from '../..';
+import {requestUserPermission} from '../config/notificationService';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,11 +38,21 @@ const ApplicationNavigator = () => {
   const getFcmToken = async () => {
     const fcmToken = await messaging().getToken();
     console.log('FCM Token:', fcmToken);
+    await AsyncStorage.setItem('fcmToken', fcmToken);
   };
   useEffect(() => {
+    requestUserPermission();
     getFcmToken();
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(
+      async remoteMessage =>
+        await handleMessagesofPushNotifictions(remoteMessage),
+    );
+    return unsubscribe;
   }, []);
 
   if (initializing) return null;
@@ -71,11 +84,11 @@ const ApplicationNavigator = () => {
       />
 
       <Stack.Navigator
-        initialRouteName={'Main'}
+        initialRouteName={'SelectPreferences'}
         screenOptions={{
           headerShown: false,
         }}>
-        {user && <Stack.Screen name="Login" component={Login} />}
+        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={SignUp} />
         <Stack.Screen
           name="Main"
