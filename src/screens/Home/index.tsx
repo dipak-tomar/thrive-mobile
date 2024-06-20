@@ -11,7 +11,7 @@ import React, {useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import CheckboxChecked from '../../Assets/CheckBoxUnChecked.svg';
 import CheckboxUnChecked from '../../Assets/CheckBoxUnChecked.svg';
-import {Linking, TouchableOpacity} from 'react-native';
+import {Linking, TouchableOpacity, useWindowDimensions} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
 import BookOpen from '../../Assets/BookOpen.svg';
 import NotificationBell from '../../Assets/NotificationBell.svg';
@@ -22,6 +22,8 @@ import {navigate} from '../../Navigators/utils';
 const Home = () => {
   const [isChecked, setisChecked] = useState(false);
   const [openReminder, setOpenReminder] = useState(false);
+  const height = useWindowDimensions().height;
+  const width = useWindowDimensions().width;
 
   const preferences = [
     {
@@ -85,21 +87,24 @@ const Home = () => {
     });
   };
   return (
-    <Box safeArea bgColor={'#F6F0FF'} flex={1}>
+    <Box safeArea bgColor={'#F6F0FF'} flex={1} mb={'16%'}>
       <HStack
         mt={'4%'}
-        ml={'4%'}
+        // ml={'4%'}
+        px={'2%'}
         alignItems={'center'}
-        justifyContent={'space-between'}>
+        justifyContent={'space-between'}
+        // bgColor={'amber.200'}
+      >
         <HStack alignItems={'center'}>
           <ThriveLogo />
           <Text
             color={'#31006F'}
-            fontSize={35}
+            fontSize={26}
             // width={'50%'}
             fontWeight={fontWeights['700']}
             fontFamily={fonts.Poppins['700']}
-            lineHeight={32}
+            lineHeight={30}
             ml={'4%'}>
             Home
           </Text>
@@ -163,7 +168,8 @@ const Home = () => {
               <TouchableOpacity
                 style={{
                   width: '80%',
-                  backgroundColor: '#F8F8F8',
+                  backgroundColor: isChecked ? '#ECF8E9' : '#F8F8F8',
+                  // backgroundColor: 'amber.300' ,
                   marginTop: '8%',
                   borderRadius: 10,
                   borderWidth: 1,
@@ -173,7 +179,7 @@ const Home = () => {
                   justifyContent: 'center',
                 }}>
                 <VStack>
-                  <Text
+                  {/* <Text
                     color={'#31006F'}
                     fontSize={18}
                     textAlign={'justify'}
@@ -181,13 +187,15 @@ const Home = () => {
                     fontWeight={fontWeights['600']}
                     fontFamily={fonts.NunitoSans['600']}>
                     {preference.title}
-                  </Text>
+                  </Text> */}
                   <Text
                     color={'gray.500'}
                     fontSize={16}
-                    textAlign={'justify'}
+                    // textAlign={'justify'}
+                    // maxWidth={width*0.65}
                     lineHeight={24}
-                    mt={'4%'}
+                    // mt={'1%'}
+
                     fontWeight={fontWeights['400']}
                     fontFamily={fonts.NunitoSans['400']}>
                     {preference.action}
@@ -196,23 +204,26 @@ const Home = () => {
                   <Pressable onPress={() => setOpenReminder(true)}>
                     <HStack
                       justifyContent={'space-between'}
-                      alignItems={'center'}>
+                      alignItems={'center'}
+                      // bgColor={'amber.300'}
+                      py={'2%'}
+                      mt={'2%'}>
                       <Text
                         color={'#31006F'}
-                        fontSize={16}
-                        textAlign={'justify'}
-                        lineHeight={24}
-                        mt={'4%'}
-                        w={'50%'}
+                        fontSize={12}
+                        // textAlign={'justify'}
+                        lineHeight={20}
+                        // mt={'4%'}
+                        // w={'50%'}
                         fontWeight={fontWeights['400']}
                         fontFamily={fonts.NunitoSans['400']}>
                         {preference.suggested_time}
                       </Text>
-                      <HStack alignItems={'center'} mt={'5%'}>
+                      <HStack alignItems={'center'}>
                         <Text
                           color={'#31006F'}
                           fontSize={16}
-                          lineHeight={16}
+                          lineHeight={20}
                           fontWeight={fontWeights['600']}
                           fontFamily={fonts.NunitoSans['600']}
                           underline>
@@ -227,6 +238,29 @@ const Home = () => {
             </HStack>
           );
         })}
+        <TouchableOpacity
+          onPress={() => {
+            console.log('pressed');
+          }}>
+          <Box
+            borderRadius={8}
+            mt={'5%'}
+            alignSelf={'center'}
+            height={height * 0.07}
+            width={width * 0.45}
+            alignItems={'center'}
+            justifyContent={'center'}
+            bgColor={'#31006F'}>
+            <Text
+              color={'white'}
+              fontSize={16}
+              lineHeight={20}
+              fontWeight={fontWeights['600']}
+              fontFamily={fonts.NunitoSans['600']}>
+              Continue
+            </Text>
+          </Box>
+        </TouchableOpacity>
         <Box h={50} />
       </ScrollView>
       <AlarmModal

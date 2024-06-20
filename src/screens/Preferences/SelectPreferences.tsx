@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import CheckboxChecked from '../../Assets/CheckBoxUnChecked.svg';
 import CheckboxUnChecked from '../../Assets/CheckBoxUnChecked.svg';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, useWindowDimensions} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
 import BookOpen from '../../Assets/BookOpen.svg';
 import NotificationBell from '../../Assets/NotificationBell.svg';
@@ -17,6 +17,8 @@ const SelectPreferences = () => {
   const [isChecked, setisChecked] = useState(false);
   const [Loading, setLoading] = useState(false);
   const [microHabbits, setmicroHabbits] = useState([]);
+  const height = useWindowDimensions().height;
+  const width = useWindowDimensions().width;
   const isFocused = useIsFocused();
   const preferences = [
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
@@ -114,16 +116,16 @@ const SelectPreferences = () => {
   ];
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
-        <HStack>
+      <HStack px={'2%'} width={width} mt={'4%'} alignItems={'center'} >
+        <HStack >
           <ThriveLogo />
           <Text
             color={'#31006F'}
-            fontSize={35}
+            fontSize={26}
             // width={'50%'}
             fontWeight={fontWeights['700']}
             fontFamily={fonts.Poppins['700']}
-            lineHeight={32}
+            lineHeight={30}
             ml={'4%'}>
             Select your preferences!
           </Text>
@@ -146,7 +148,28 @@ const SelectPreferences = () => {
           mt={'2%'}>
           Hey Aman!👋🏼
         </Text>
-        {microHabbits.length === 0 && <Text>No habbits available</Text>}
+        {microHabbits?.length === 0 && (
+          <Box
+            height={height * 0.2}
+            width={width * 0.6}
+            alignSelf={'center'}
+            justifyContent={'center'}
+            borderRadius={12}
+            borderColor={'gray.400'}
+            borderWidth={1}
+            mt={'5%'}
+            bgColor={'gray.200'}>
+            <Text
+              color={'#31006F'}
+              fontSize={18}
+              textAlign={'center'}
+              lineHeight={24}
+              fontWeight={fontWeights['600']}
+              fontFamily={fonts.NunitoSans['600']}>
+              No Habbits Found !!
+            </Text>
+          </Box>
+        )}
         {microHabbits?.map(preference => {
           const isChecked = selectedPreferences.includes(preference.action);
           return (
@@ -198,11 +221,29 @@ const SelectPreferences = () => {
         <TouchableOpacity
           onPress={() => navigate('Main', {})}
           style={{
+            // width: width * 0.3,
+            height: width * 0.12,
             backgroundColor: '#31006F',
             padding: 12,
-            borderRadius: 20,
+            borderRadius: 100,
+            alignSelf: 'center',
+            justifyContent: 'center',
+            marginTop: '4%',
+            marginBottom: '5%',
           }}>
-          <Icon as={Feather} name="arrow-right" color={'#fff'} />
+          <HStack alignSelf= {'center'}
+            justifyContent={ 'space-between'} px={'2%'} >
+            <Text
+              fontSize={14}
+              textAlign={'justify'}
+              lineHeight={18}
+              fontWeight={fontWeights['600']}
+              fontFamily={fonts.NunitoSans['600']}
+              color={'white'}>
+              Proceed
+            </Text>
+            <Icon ml={'2%'} as={Feather} size={5} name="arrow-right" color={'#fff'} />
+          </HStack>
         </TouchableOpacity>
         {Loading ? <Loader /> : null}
       </ScrollView>

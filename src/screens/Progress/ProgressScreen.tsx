@@ -29,6 +29,7 @@ const ProgressScreen = () => {
           mt={'4%'}
           mx={'1%'}
           //   ml={'4%'}
+          // bgColor={'amber.300'}
           alignItems={'center'}
           justifyContent={'space-between'}>
           <Box>
@@ -36,12 +37,12 @@ const ProgressScreen = () => {
           </Box>
           <Text
             color={'#31006F'}
-            fontSize={30}
+            fontSize={28}
             // width={'50%'}
             fontWeight={700}
             fontFamily={fonts.Poppins['700']}
             lineHeight={32}
-            ml={'-3%'}>
+            ml={'-5%'}>
             My Progress
           </Text>
           <HStack>
@@ -99,7 +100,9 @@ const ProgressScreen = () => {
             </Text>
           </TouchableOpacity>
         </HStack>
+        <Box mb={'6%'}>
         {progress ? <Progress /> : <Leaderboard />}
+        </Box>
       </ScrollView>
     </Box>
   );

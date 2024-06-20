@@ -201,13 +201,13 @@ const Preference = () => {
   };
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <Box ml={'3%'}>
+      <ScrollView>
+      <Box mt={'2%'} px={'4%'} >
         <ThriveLogo />
       </Box>
-      <ScrollView>
         {step === 0 ? (
           <>
-            <Box alignItems={'center'} mt={'20%'}>
+            <Box alignItems={'center'} mt={'5%'} >
               <Text
                 color={'#31006F'}
                 fontSize={30}
@@ -238,7 +238,7 @@ const Preference = () => {
               </HStack>
             </Box>
 
-            <Box alignItems={'center'} mt={'20%'}>
+            <Box alignItems={'center'} mt={'5%'}>
               <Text
                 color={'#31006F'}
                 fontSize={30}
@@ -266,8 +266,8 @@ const Preference = () => {
 
             <HStack
               alignItems={'center'}
-              mt={'20%'}
-              //   bgColor={'amber.400'}
+              mt={'8%'}
+                // bgColor={'amber.400'}
               justifyContent={'center'}>
               <Box>
                 <SmallHeight />
@@ -304,7 +304,7 @@ const Preference = () => {
 
             <HStack
               alignItems={'center'}
-              mt={'20%'}
+              mt={'5%'}
               //   bgColor={'amber.400'}
               justifyContent={'center'}>
               <Box>

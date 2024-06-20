@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Box, Checkbox, HStack, Input, Text, VStack} from 'native-base';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, useWindowDimensions} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
 import auth from '@react-native-firebase/auth';
 import {navigate} from '../../Navigators/utils';
@@ -13,6 +13,9 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setloading] = useState(false);
+  const height = useWindowDimensions().height;
+  const width = useWindowDimensions().width;
+
   const signInUser = async () => {
     setloading(true);
     try {
@@ -42,21 +45,21 @@ const Login = () => {
 
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
+      <HStack px={'3%'} width={width} mt={'4%'}  alignItems={'center'}>
         <ThriveLogo />
         <Text
           color={'#31006F'}
-          fontSize={35}
+          fontSize={28}
           fontWeight={fontWeights['700']}
           fontFamily={fonts.Poppins['700']}
-          // lineHeight={24}
+          lineHeight={32}
           ml={'4%'}>
           Login
         </Text>
       </HStack>
 
       {/* Email/ Phone Number */}
-      <VStack mt={'35%'}>
+      <VStack  mt={'15%'}>
         <Text
           color={'#31006F'}
           fontSize={18}

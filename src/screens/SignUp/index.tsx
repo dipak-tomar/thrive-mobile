@@ -42,20 +42,20 @@ const SignUp = () => {
   };
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
+      <HStack px={'4%'} mt={'4%'} alignItems={'center'} >
         <ThriveLogo />
         <Text
           color={'#31006F'}
-          fontSize={35}
+          fontSize={28}
           fontWeight={fontWeights['700']}
           fontFamily={fonts.Poppins['700']}
-          // lineHeight={24}
+          lineHeight={32}
           ml={'4%'}>
           Sign up
         </Text>
       </HStack>
       {/* name input */}
-      <VStack mt={'20%'}>
+      <VStack mt={'14%'}>
         <Text
           color={'#31006F'}
           fontSize={18}

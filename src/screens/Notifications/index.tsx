@@ -13,9 +13,12 @@ import DashedVerticalLine from '../../Assets/DashedVerticalLine.svg';
 import BookOpen from '../../Assets/BookOpen.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Loader} from '../../components/Loader';
+import { useWindowDimensions } from 'react-native';
 const Notifications = () => {
   const [data, setdata] = useState();
   const [loading, setloading] = useState(false);
+  const height = useWindowDimensions().height;
+  const width = useWindowDimensions().width;
 
   useEffect(() => {
     getData();
@@ -39,12 +42,20 @@ const Notifications = () => {
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack
         mt={'4%'}
-        ml={'4%'}
+        // ml={'4%'}
         alignItems={'center'}
-        justifyContent={'space-around'}>
+        justifyContent={'space-around'}
+        >
         <HStack>
           <ThriveLogo />
-          <Text color={'#31006F'} fontSize={35} ml={'4%'}>
+          <Text
+            color={'#31006F'}
+            fontSize={28}
+            lineHeight={32}
+            ml={'4%'}
+            mt={'4%'}
+            fontWeight={'700'}
+            fontFamily={'Averta Std'}>
             Notifications
           </Text>
         </HStack>
@@ -61,25 +72,31 @@ const Notifications = () => {
                   justifyContent={'space-around'}
                   backgroundColor={'#F6F0FF'}
                   alignItems={'center'}
-                  padding={4}
+                  // padding={4}
+                  py={'2%'}
+                  px={'2%'}
+                  mt={'2%'}
+                  // bgColor={'amber.300'}
                   // margin={1}
                 >
+                  <HStack alignItems={'center'} >
                   <Image
                     style={{
-                      height: 50,
-                      width: 50,
+                      height: 35,
+                      width: 35,
                       resizeMode: 'cover',
                     }}
                     borderRadius={'full'}
                     source={require('../../Assets/images/test_image.png')}
                     alt="image"
                   />
-                  <VStack>
+                  <VStack  ml={'5%'}>
                     <Text
                       numberOfLines={1}
                       color={'#31006F'}
                       fontWeight={'600'}
                       fontSize={16}
+
                       fontFamily={'Averta Std'}>
                       Hey, it’s time for lunch
                     </Text>
@@ -92,9 +109,12 @@ const Notifications = () => {
                       About {new Date().getMinutes()} m ago
                     </Text>
                   </VStack>
+                  </HStack>
                   <DashedVerticalLine />
                 </HStack>
-                <Divider width={'85%'} ml={'9%'} thickness={2} />
+                <Box alignSelf={'center'}>
+                <Divider  width={width*0.92}  thickness={1}  mt={'2%'}/>
+                </Box>
               </>
             );
           })}

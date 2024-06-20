@@ -17,50 +17,60 @@ const Progress = () => {
     const height = useWindowDimensions().height;
     const width = useWindowDimensions().width;
     const days = [
-      {value: 10, dayName: 'Sun'},
-      {value: 20, dayName: 'Mon'},
-      {value: 40, dayName: 'Tue'},
+      {value: 60, dayName: 'Sun'},
+      {value: 40, dayName: 'Mon'},
+      {value: 50, dayName: 'Tue'},
       {value: 35, dayName: 'Wed'},
-      {value: 90, dayName: 'Thu'},
-      {value: 100, dayName: 'Fri'},
-      {value: 85, dayName: 'Sat'},
+      {value: 65, dayName: 'Thu'},
+      {value: 85, dayName: 'Fri'},
+      {value: 70, dayName: 'Sat'},
     ];
     const habitsData = [
-      {name: 'Total Habits', value: 10},
+      {name: 'Total Habits', value: 12},
       {name: 'Habits Followed', value: 5},
       {
         name: 'Habits Not Followed',
-        value: 5,
+        value: 7,
       },
     ];
-    const averagePercentage = 75
-    const VerticalProgressBar = ({progress}) => {
+    const averagePercentage = 70
+    const VerticalProgressBar = ({ progress }) => {
       return (
         <View
           style={{
-            flexDirection: 'column',
+            flexDirection: 'column-reverse',
             width: 20,
             height: 150,
             backgroundColor: '#f0f0f0',
             borderRadius: 12,
             overflow: 'hidden',
-          }}>
-          {/* Empty part of the progress bar */}
-  
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: '#F7F8F8',
-              height: `${100 - progress}%`,
-            }}
-          />
+            position: 'relative',
+          }}
+        >
           {/* Filled part of the progress bar */}
           <View
-            style={{flex: 1, backgroundColor: '#31006F', height: `${progress}%`}}
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              width: '100%',
+              height: `${progress}%`,
+              backgroundColor: '#31006F',
+            }}
+          />
+          {/* Empty part of the progress bar */}
+          <View
+            style={{
+              position: 'absolute',
+              bottom: `${progress}%`,
+              width: '100%',
+              height: `${100 - progress}%`,
+              backgroundColor: '#F7F8F8',
+            }}
           />
         </View>
       );
     };
+    
   return (
     <Box>
     <VStack mt={'10%'}>

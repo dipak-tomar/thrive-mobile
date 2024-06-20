@@ -4,7 +4,7 @@ import {fontWeights, fonts} from '../../config/fonts.config';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import ContinueScreen1 from '../../Assets/ContinueScreen1.svg';
 import ContinueScreen2 from '../../Assets/ContinueScreen2.svg';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, useWindowDimensions} from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import {navigate} from '../../Navigators/utils';
 
@@ -12,10 +12,10 @@ const ContinueScrren = () => {
    const route = useRoute();
    const {fromLogin} = route?.params;
    console.log("routte",route?.params?.fromLogin);
-   
+   const width = useWindowDimensions().width;
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
+      <HStack width={width} mt={'4%'} px={'4%'} alignItems={'center'} >
         <ThriveLogo />
         {/* <Text
           color={'#31006F'}
@@ -36,24 +36,30 @@ const ContinueScrren = () => {
           fontSize={30}
           fontWeight={fontWeights['400']}
           fontFamily={fonts.NunitoSans['400']}
+          textAlign={'center'}
           // lineHeight={24}
-          ml={'4%'}>
+          >
          Welcome Back!! We Missed You💜
         </Text>
-      </Box>) : (<Box alignSelf={"center"} mt={"35%"}>
-        <Box>
+      </Box>) : 
+      (<Box alignSelf={"center"} mt={"14%"}>
+        <Box alignSelf={"center"} >
          <ContinueScreen2 /> 
         </Box>
         <Text
           color={'#31006F'}
-          fontSize={30}
-          fontWeight={fontWeights['400']}
+          fontSize={24}
+          
           fontFamily={fonts.NunitoSans['400']}
+          textAlign={'center'}
+          mt={'4%'}
+          px={'3%'}
           // lineHeight={24}
-          ml={'4%'}>
+          >
        Let's personalize your Thrive path with a few taps!
         </Text>
-      </Box>)}
+      </Box>)
+      }
 
      {fromLogin  && <TouchableOpacity
      
