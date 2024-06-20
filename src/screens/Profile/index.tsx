@@ -24,8 +24,8 @@ import RNRestart from 'react-native-restart';
 import auth from '@react-native-firebase/auth';
 import {getItem} from '../../config/asyncStorage';
 import {useIsFocused} from '@react-navigation/native';
-import { useWindowDimensions } from 'react-native';
-
+import {useWindowDimensions} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 const Profile = () => {
   const [Loading, setLoading] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -33,6 +33,7 @@ const Profile = () => {
   const [user, setuser] = useState({});
   const height = useWindowDimensions().height;
   const width = useWindowDimensions().width;
+  const [userData, setuserData] = useState({});
 
   useEffect(() => {
     async function getCurrentUser() {
@@ -53,6 +54,33 @@ const Profile = () => {
     getCurrentUser();
   }, [isFocused]);
 
+  const getUserByEmail = async () => {
+    setLoading(true);
+    try {
+      const querySnapshot = await firestore()
+        .collection('users')
+        .where('email', '==', 'dipakkumartomar29@gmail.com')
+        .get();
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0].data();
+        setuserData(userDoc);
+        console.log('User document retrieved:', userDoc);
+      } else {
+        console.log('No user found with this email.');
+        setuserData(null);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error('Error getting user document:', error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUserByEmail();
+  }, [user]);
+
   const handleLogout = async () => {
     setLoading(true);
     try {
@@ -71,8 +99,13 @@ const Profile = () => {
 
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <HStack width={width} mt={'4%'} px={'4%'} alignItems={'center'} alignSelf={'center'} >
-        <HStack alignItems={'center'} >
+      <HStack
+        width={width}
+        mt={'4%'}
+        px={'4%'}
+        alignItems={'center'}
+        alignSelf={'center'}>
+        <HStack alignItems={'center'}>
           <ThriveLogo />
           <Text
             color={'#31006F'}
@@ -81,9 +114,7 @@ const Profile = () => {
             fontFamily={fonts.Poppins['700']}
             lineHeight={34}
             mt={'2%'}
-            ml={'4%'}
-            
-            >
+            ml={'4%'}>
             Profile
           </Text>
         </HStack>
@@ -129,9 +160,9 @@ const Profile = () => {
         </HStack>
         <HStack ml={'4%'} mt={'5%'}>
           {[
-            {value: '180 cm', text: 'Height'},
-            {value: '100 kg', text: 'Weight'},
-            {value: '22yo', text: 'Age'},
+            {value: userData?.height ?? '', text: 'Height'},
+            {value: userData?.weight ?? '', text: 'Weight'},
+            {value: userData?.age ?? '', text: 'Age'},
           ].map(i => {
             return (
               <Box

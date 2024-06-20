@@ -1,4 +1,12 @@
-import {Box, HStack, Icon, Pressable, ScrollView, Text} from 'native-base';
+import {
+  Box,
+  HStack,
+  Icon,
+  Pressable,
+  ScrollView,
+  Text,
+  useToast,
+} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import CheckboxChecked from '../../Assets/CheckBoxUnChecked.svg';
@@ -13,13 +21,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Feather from 'react-native-vector-icons/Feather';
 import {useIsFocused} from '@react-navigation/native';
 import {Loader} from '../../components/Loader';
+import firestore from '@react-native-firebase/firestore';
+
 const SelectPreferences = () => {
-  const [isChecked, setisChecked] = useState(false);
   const [Loading, setLoading] = useState(false);
   const [microHabbits, setmicroHabbits] = useState([]);
   const height = useWindowDimensions().height;
   const width = useWindowDimensions().width;
   const isFocused = useIsFocused();
+  const toast = useToast();
   const preferences = [
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
@@ -27,7 +37,6 @@ const SelectPreferences = () => {
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
   ];
   const [selectedPreferences, setSelectedPreferences] = useState([]);
-  console.log('ischecked', isChecked);
 
   useEffect(() => {
     async function getMicroHabbits() {
@@ -57,13 +66,18 @@ const SelectPreferences = () => {
   }, [isFocused]);
   const togglePreference = preference => {
     setSelectedPreferences(prevSelected => {
-      if (prevSelected.includes(preference.action)) {
-        return prevSelected.filter(item => item !== preference.action);
+      if (prevSelected.some(item => item.action === preference.action)) {
+        // Remove the item if it already exists
+        return prevSelected.filter(item => item.action !== preference.action);
       } else {
-        return [...prevSelected, preference.action];
+        // Add the item if it does not exist
+        return [...prevSelected, preference];
       }
     });
   };
+
+  console.log('selected preferences', selectedPreferences);
+
   const habbitsData = [
     {
       title: 'Practice deep breathing exercises',
@@ -114,6 +128,38 @@ const SelectPreferences = () => {
       suggested_time: '5:00 AM - 11:00 AM',
     },
   ];
+
+  const updateUserByEmail = async () => {
+    setLoading(true);
+    try {
+      const querySnapshot = await firestore()
+        .collection('users')
+        .where('email', '==', 'dipakkumartomar29@gmail.com')
+        .get();
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        await firestore().collection('users').doc(userDoc.id).update({
+          suggested_habbits: habbitsData,
+          selected_habbits: selectedPreferences,
+        });
+        console.log('User document updated:', userDoc.id);
+        toast.show({description: 'User details updated!', duration: 2000});
+        setLoading(false);
+      } else {
+        console.log('No user found with this email.');
+        setLoading(false);
+        toast.show({
+          description: 'No user found with this email!',
+          duration: 2000,
+        });
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Error updating user document:', error);
+    }
+  };
+
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack
@@ -181,7 +227,9 @@ const SelectPreferences = () => {
           </Box>
         )}
         {microHabbits?.map(preference => {
-          const isChecked = selectedPreferences.includes(preference.action);
+          const isChecked = selectedPreferences.some(
+            item => item.action === preference.action,
+          );
           return (
             <HStack alignItems={'center'}>
               <Pressable
@@ -229,7 +277,10 @@ const SelectPreferences = () => {
           );
         })}
         <TouchableOpacity
-          onPress={() => navigate('Main', {})}
+          onPress={async () => {
+            await updateUserByEmail();
+            navigate('Main', {});
+          }}
           style={{
             // width: width * 0.3,
             height: width * 0.12,
@@ -263,8 +314,8 @@ const SelectPreferences = () => {
             />
           </HStack>
         </TouchableOpacity>
-        {Loading ? <Loader /> : null}
       </ScrollView>
+      {Loading ? <Loader /> : null}
     </Box>
   );
 };

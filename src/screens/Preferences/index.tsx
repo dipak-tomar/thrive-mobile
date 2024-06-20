@@ -7,6 +7,7 @@ import {
   Text,
   VStack,
   Pressable,
+  useToast,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
@@ -44,6 +45,8 @@ const Preference = () => {
   const [loading, setloading] = useState(false);
   const [apiConfig, setApiConfig] = useState({});
   const isFocused = useIsFocused();
+  const [user, setuser] = useState({});
+  const toast = useToast();
   const genderOptions = [
     {text: 'Male', icon: <MaleIcon />},
     {text: 'Female', icon: <FemaleIcon />},
@@ -59,6 +62,18 @@ const Preference = () => {
     }
   }, [step]);
 
+  async function getCurrentUser() {
+    try {
+      const userString = await AsyncStorage.getItem('currentUser');
+      if (userString) {
+        const userInfo = JSON.parse(userString);
+        setuser(userInfo);
+        console.log('User retrieved from AsyncStorage', userInfo);
+      }
+    } catch (error) {
+      console.error('Error retrieving user from AsyncStorage', error);
+    }
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -80,7 +95,44 @@ const Preference = () => {
     };
 
     fetchData();
+    getCurrentUser();
   }, [isFocused]);
+
+  const updateUserByEmail = async () => {
+    try {
+      const querySnapshot = await firestore()
+        .collection('users')
+        .where('email', '==', 'dipakkumartomar29@gmail.com')
+        .get();
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        await firestore()
+          .collection('users')
+          .doc(userDoc.id)
+          .update({
+            age: age,
+            gender: gender,
+            goal: primaryGoals,
+            habit: habbits,
+            height: Math.floor(heightSliderValue),
+            weight: Math.floor(weightSliderValue),
+            medical_condition: medicalCondition,
+            schedule: timesOfTheDay,
+          });
+        console.log('User document updated:', userDoc.id);
+        toast.show({description: 'User details updated!', duration: 2000});
+      } else {
+        console.log('No user found with this email.');
+        toast.show({
+          description: 'No user found with this email!',
+          duration: 2000,
+        });
+      }
+    } catch (error) {
+      console.error('Error updating user document:', error);
+    }
+  };
 
   async function callRespellAPI() {
     const url = 'https://api.respell.ai/v1/run';
@@ -161,6 +213,7 @@ const Preference = () => {
     ];
     try {
       await AsyncStorage.setItem('habbitsData', JSON.stringify(habbitsData));
+      await updateUserByEmail();
       console.log('Data saved to AsyncStorage successfully.');
       setStep(prev => prev + 1);
       setloading(false);
@@ -615,8 +668,8 @@ const Preference = () => {
             </TouchableOpacity>
           </HStack>
         )}
-        {loading ? <Loader /> : null}
       </ScrollView>
+      {loading ? <Loader /> : null}
     </Box>
   );
 };

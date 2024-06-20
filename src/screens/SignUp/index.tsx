@@ -15,6 +15,9 @@ import auth from '@react-native-firebase/auth';
 import {navigate} from '../../Navigators/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Loader} from '../../components/Loader';
+import firestore from '@react-native-firebase/firestore';
+import {getItem} from '../../config/asyncStorage';
+import messaging from '@react-native-firebase/messaging';
 
 const SignUp = () => {
   const [fullName, setFullName] = useState('');
@@ -32,7 +35,14 @@ const SignUp = () => {
       await response.user.updateProfile({
         displayName: fullName,
       });
+      const fcmToken = await messaging().getToken();
+      await firestore().collection('users').doc(response.user.uid).set({
+        fullName: fullName,
+        email: email,
+        app_key: fcmToken,
+      });
       await AsyncStorage.setItem('currentUser', JSON.stringify(response.user));
+
       navigate('ContinueScreen', {fromLogin: false});
       console.log('User account created & signed in!', response);
       setloading(false);

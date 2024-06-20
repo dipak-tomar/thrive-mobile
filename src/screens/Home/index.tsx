@@ -6,8 +6,9 @@ import {
   ScrollView,
   Text,
   VStack,
+  useToast,
 } from 'native-base';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import CheckboxChecked from '../../Assets/CheckBoxUnChecked.svg';
 import CheckboxUnChecked from '../../Assets/CheckBoxUnChecked.svg';
@@ -19,10 +20,50 @@ import CheckMark from '../../Assets/CheckMark.svg';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import AlarmModal from './components/AlarmModal';
 import {navigate} from '../../Navigators/utils';
+import firestore from '@react-native-firebase/firestore';
+import {useIsFocused} from '@react-navigation/native';
+import {AsyncStorage} from 'react-native';
 const Home = () => {
   const [openReminder, setOpenReminder] = useState(false);
   const height = useWindowDimensions().height;
   const width = useWindowDimensions().width;
+  const [userData, setuserData] = useState({});
+  const isFocused = useIsFocused();
+  const [user, setuser] = useState({});
+  const toast = useToast();
+  const [microHabbits, setmicroHabbits] = useState([]);
+
+  useEffect(() => {
+    async function getCurrentUser() {
+      try {
+        const userString = await AsyncStorage.getItem('currentUser');
+        if (userString) {
+          const userInfo = JSON.parse(userString);
+          setuser(userInfo);
+
+          console.log('User retrieved from AsyncStorage', userInfo);
+        }
+      } catch (error) {
+        console.error('Error retrieving user from AsyncStorage', error);
+      }
+    }
+    async function getSelectedPrefernces() {
+      try {
+        const updatedSelectedPreferences = await AsyncStorage.getItem(
+          'habbitsData',
+        );
+        if (updatedSelectedPreferences) {
+          const userInfo = JSON.parse(updatedSelectedPreferences);
+          setmicroHabbits(userInfo);
+          console.log('User retrieved from AsyncStorage', userInfo);
+        }
+      } catch (error) {
+        console.error('Error retrieving user from AsyncStorage', error);
+      }
+    }
+    getCurrentUser();
+    getSelectedPrefernces();
+  }, [isFocused]);
 
   const preferences = [
     {
@@ -74,16 +115,91 @@ const Home = () => {
       suggested_time: '5:00 AM - 11:00 AM',
     },
   ];
-  const [selectedPreferences, setSelectedPreferences] = useState([]);
 
-  const togglePreference = preference => {
-    setSelectedPreferences(prevSelected => {
-      if (prevSelected.includes(preference.action)) {
-        return prevSelected.filter(item => item !== preference.action);
+  useEffect(() => {
+    if (user) {
+      getUserByEmail();
+    }
+  }, [user]);
+
+  const [selectedPreferences, setSelectedPreferences] = useState([]);
+  const updateUserByEmail = async updatedSelectedData => {
+    try {
+      const querySnapshot = await firestore()
+        .collection('users')
+        .where('email', '==', 'dipakkumartomar29@gmail.com')
+        .get();
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        await firestore().collection('users').doc(userDoc.id).update({
+          selected_habbits: updatedSelectedData,
+        });
+        console.log('User Preference updated:', userDoc.id);
+        toast.show({description: 'User Preference updated!', duration: 2000});
       } else {
-        return [...prevSelected, preference.action];
+        console.log('No user found with this email.');
+
+        toast.show({
+          description: 'No user found with this email!',
+          duration: 2000,
+        });
+      }
+    } catch (error) {
+      console.error('Error updating user document:', error);
+    }
+  };
+  const togglePreference = async preference => {
+    const notPresent = userData.suggested_habbits.filter(
+      i => i.action !== preference.action,
+    );
+
+    setSelectedPreferences(prevSelected => {
+      if (prevSelected.some(item => item.action === preference.action)) {
+        // Remove the item if it already exists
+        return prevSelected.filter(item => item.action !== preference.action);
+      } else {
+        // Add the item if it does not exist
+        return [...prevSelected, preference];
       }
     });
+    await updateUserByEmail([...notPresent, preference]);
+  };
+
+  const getUserByEmail = async () => {
+    try {
+      console.log('userinfo', user);
+
+      const querySnapshot = await firestore()
+        .collection('users')
+        .where('email', '==', user?.email)
+        .get();
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0].data();
+        setuserData(userDoc);
+        console.log('User document retrieved:', userDoc);
+      } else {
+        console.log('No user found with this email.');
+        setuserData(null);
+      }
+    } catch (error) {
+      console.error('Error getting user document:', error);
+    }
+  };
+
+  const getDayAbbreviation = date => {
+    const daysOfWeek = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
+    const dayIndex = date.getDay(); // Get the day index (0-6)
+    return daysOfWeek[dayIndex]; // Return the corresponding abbreviation
   };
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1} mb={'16%'}>
@@ -132,7 +248,9 @@ const Home = () => {
           Hey Aman!👋🏼
         </Text>
         {preferences?.map(preference => {
-          const isChecked = selectedPreferences.includes(preference.action);
+          const isChecked = selectedPreferences.some(
+            item => item.action === preference.action,
+          );
           return (
             <HStack alignItems={'center'}>
               <Pressable
@@ -140,7 +258,16 @@ const Home = () => {
                 mt={'8%'}
                 // bgColor={'green.400'}
                 w={'15%'}
-                onPress={() => togglePreference(preference)}>
+                onPress={() =>
+                  togglePreference({
+                    title: preference?.title,
+                    action: preference?.action,
+                    suggested_time: preference?.suggested_time,
+                    isMarkedDone: isChecked,
+                    dayName: getDayAbbreviation(new Date()),
+                    date: new Date(),
+                  })
+                }>
                 <Box>
                   <CheckboxUnChecked width={40} height={40} />
                   {isChecked && (
