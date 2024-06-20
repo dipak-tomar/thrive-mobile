@@ -27,12 +27,14 @@
     "react-native-analog-clock": "^0.3.1",
     "react-native-circular-progress": "^1.4.0",
     "react-native-clock-analog": "^0.0.3",
+    "react-native-linear-gradient": "^2.8.3",
     "react-native-permissions": "^4.1.5",
     "react-native-restart": "^0.0.27",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "^3.31.1",
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "12.1.1",
+    "react-native-timer-picker": "^1.8.2",
     "react-native-vector-icons": "^10.1.0"
   },
   "devDependencies": {

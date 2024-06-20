@@ -24,8 +24,9 @@ import RNRestart from 'react-native-restart';
 import auth from '@react-native-firebase/auth';
 import {getItem} from '../../config/asyncStorage';
 import {useIsFocused} from '@react-navigation/native';
-import {useWindowDimensions} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import {Linking, TouchableOpacity, useWindowDimensions} from 'react-native';
+
 const Profile = () => {
   const [Loading, setLoading] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -247,24 +248,30 @@ const Profile = () => {
             mt={'5%'}>
             Other
           </Text>
-
-          <HStack justifyContent={'space-between'} mt={'5%'}>
-            <HStack ml={'4%'} alignItems={'center'}>
-              <Box>
-                <PrivacyIcon />
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(
+                'https://capable-ricotta-490.notion.site/Thrive-Privacy-Policy-24496156f7d04220b093328d3e17a8b2?pvs=4',
+              );
+            }}>
+            <HStack justifyContent={'space-between'} mt={'5%'}>
+              <HStack ml={'4%'} alignItems={'center'}>
+                <Box>
+                  <PrivacyIcon />
+                </Box>
+                <Text
+                  color={'#7B6F72'}
+                  fontSize={12}
+                  fontWeight={'400'}
+                  ml={'7%'}>
+                  Privacy Policy
+                </Text>
+              </HStack>
+              <Box mr={'4%'}>
+                <LeftArrow />
               </Box>
-              <Text
-                color={'#7B6F72'}
-                fontSize={12}
-                fontWeight={'400'}
-                ml={'7%'}>
-                Privacy Policy
-              </Text>
             </HStack>
-            <Box mr={'4%'}>
-              <LeftArrow />
-            </Box>
-          </HStack>
+          </TouchableOpacity>
         </Box>
         <Pressable
           mt={'5%'}

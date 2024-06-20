@@ -10104,6 +10104,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-linear-gradient@npm:^2.8.3":
+  version: 2.8.3
+  resolution: "react-native-linear-gradient@npm:2.8.3"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: f980d324e551bbc475c6406bdc5250a08242020cbe653412fa169bbdf51e28a502e225de105b4d696d6a1a1b733d44782469020f4936d8b3ce0e2c78e51cf58f
+  languageName: node
+  linkType: hard
+
 "react-native-permissions@npm:^4.1.5":
   version: 4.1.5
   resolution: "react-native-permissions@npm:4.1.5"
@@ -10185,6 +10195,16 @@ __metadata:
     react: "*"
     react-native: ">=0.50.0"
   checksum: 20a9b2987bf5836821e51a0497fc2b598a859032fe168f80c6dcab3727bf26dc34bcb3197059e1e5775dfc91b6b20633502292d8c82e9aeb3e76807d03e0189d
+  languageName: node
+  linkType: hard
+
+"react-native-timer-picker@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "react-native-timer-picker@npm:1.8.2"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-native: ">=0.59.0"
+  checksum: aa157272d62ffc240cc4699f0274c2c82878e1b2b44432a722d31592bea059aab47cf5cf79eb831c83b8d0867b66662c80f56c5be3f0536804b1fe3de41141b0
   languageName: node
   linkType: hard
 
@@ -11440,6 +11460,7 @@ __metadata:
     react-native-analog-clock: ^0.3.1
     react-native-circular-progress: ^1.4.0
     react-native-clock-analog: ^0.0.3
+    react-native-linear-gradient: ^2.8.3
     react-native-permissions: ^4.1.5
     react-native-restart: ^0.0.27
     react-native-safe-area-context: 3.3.2
@@ -11447,6 +11468,7 @@ __metadata:
     react-native-splash-screen: ^3.3.0
     react-native-svg: 12.1.1
     react-native-svg-transformer: ^1.4.0
+    react-native-timer-picker: ^1.8.2
     react-native-vector-icons: ^10.1.0
     react-test-renderer: 18.2.0
     typescript: 5.0.4

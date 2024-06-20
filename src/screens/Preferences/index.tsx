@@ -457,8 +457,8 @@ const Preference = () => {
                     style={{
                       width: '90%',
                       backgroundColor: !primaryGoals.includes(question)
-                        ? '#fff'
-                        : 'gray',
+                        ? '#ffffff'
+                        : '#ECF8E9',
                       marginTop: '8%',
                       borderRadius: 10,
                       borderWidth: 1,
@@ -512,7 +512,7 @@ const Preference = () => {
                       width: '90%',
                       backgroundColor: !habbits.includes(question)
                         ? '#fff'
-                        : 'gray',
+                        : '#ECF8E9',
                       marginTop: '8%',
                       borderRadius: 10,
                       borderWidth: 1,
@@ -561,7 +561,7 @@ const Preference = () => {
                     style={{
                       width: '90%',
                       backgroundColor:
-                        timesOfTheDay !== question ? '#fff' : 'gray',
+                        timesOfTheDay !== question ? '#fff' : '#ECF8E9',
                       marginTop: '8%',
                       borderRadius: 10,
                       borderWidth: 1,
@@ -656,15 +656,28 @@ const Preference = () => {
         )}
 
         {step !== 4 && step !== 5 && (
-          <HStack alignSelf={'flex-end'} mr={'4%'} mt={'8%'}>
+          <HStack  alignSelf={'center'} mt={'6%'} mb={'8%'}>
             <TouchableOpacity
               onPress={() => setStep(prev => prev + 1)}
               style={{
+                // height: width*0.12 ,
+                width : width*0.3 , 
                 backgroundColor: '#31006F',
-                padding: 12,
-                borderRadius: 20,
+                // padding: 12,
+                paddingHorizontal : '2%' ,
+                borderRadius: 12,
               }}>
-              <Icon as={Feather} name="arrow-right" color={'#fff'} />
+                <HStack justifyContent={'center'} alignSelf={'center'} py={'6%'} px={'4%'}>
+                 <Text
+              color={'white'}
+              fontSize={16}
+              lineHeight={20}
+              fontWeight={fontWeights['600']}
+              fontFamily={fonts.NunitoSans['600']}>
+             Proceed
+            </Text>
+              <Icon ml={'1'} mt={'1'} as={Feather} name="arrow-right" color={'#fff'} />
+            </HStack>
             </TouchableOpacity>
           </HStack>
         )}

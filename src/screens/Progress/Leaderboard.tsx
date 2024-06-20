@@ -12,26 +12,26 @@ const Leaderboard = () => {
   const height = useWindowDimensions().height;
   const width = useWindowDimensions().width;
   const data = [
-    {name: 'Alice', number: 95},
-    {name: 'Bob', number: 93},
-    {name: 'Charlie', number: 91},
-    {name: 'David', number: 78},
-    {name: 'Eve', number: 77},
-    {name: 'Frank', number: 75},
-    {name: 'Grace', number: 72},
-    {name: 'Hank', number: 67},
-    {name: 'Ivy', number: 66},
-    {name: 'Jack', number: 64},
-    {name: 'Alice', number: 60},
-    {name: 'Bob', number: 54},
-    {name: 'Charlie', number: 52},
-    {name: 'David', number: 50},
-    {name: 'Eve', number: 49},
-    {name: 'Frank', number: 48},
-    {name: 'Grace', number: 45},
-    {name: 'Hank', number: 42},
-    {name: 'Ivy', number: 38},
-    {name: 'Jack', number: 33},
+    {name: 'Aman Kataria', number: 95},
+    {name: 'Aman Dewangan', number: 93},
+    {name: 'Ramya ', number: 91},
+    {name: 'Dipak Kumar', number: 78},
+    {name: 'Abhinav Anand', number: 77},
+    {name: 'Saurabh Srivastava', number: 75},
+    {name: 'Shivani Singhal', number: 72},
+    {name: 'Utkarsha Sharma', number: 67},
+    {name: 'Aakriti Bhardwaj', number: 66},
+    {name: 'Harsh Rastogi', number: 64},
+    {name: 'Akshay Rajput', number: 60},
+    {name: 'Monika Singh', number: 54},
+    {name: 'Ankita', number: 52},
+    {name: 'Aniket Verma', number: 50},
+    {name: 'Himanshu Singh', number: 49},
+    {name: 'Muskan Sharma', number: 48},
+    {name: 'Shubangi Sethi', number: 45},
+    {name: 'Shahrukh Khan', number: 42},
+    {name: 'Salman Khan', number: 38},
+    {name: 'Aamir Khan', number: 33},
   ];
 
   const renderItem = ({item, index}) => (
@@ -44,6 +44,7 @@ const Leaderboard = () => {
       bgColor={index === 0 ? '#FFE166' : (index === 1 ? '#B3CBEF' :index === 2 ? '#FCD9C5' : null )}
       alignItems={'center'}
       alignSelf={'center'}
+      // ml={'4%'}
       justifyContent={'space-between'}
       width={ index === 0 ?  width*0.93 :(index === 1 ?  width*0.88 :(index === 2 ?  width * 0.84 : width*0.80))}>
       <HStack
@@ -72,7 +73,9 @@ const Leaderboard = () => {
       <HStack
         width={width * 0.13}
         alignItems={'center'}
-        justifyContent={'space-evenly'}>
+        justifyContent={'space-evenly'}
+        
+        >
         <Icon as={AntDesign} color={'#FFCA28'} name="star" size={3} />
         <Text>{item.number}</Text>
       </HStack>
@@ -80,7 +83,7 @@ const Leaderboard = () => {
   );
 
   return (
-    <Box>
+    <Box  mb={'13%'}>
       <FlatList
         data={data}
         renderItem={renderItem}
