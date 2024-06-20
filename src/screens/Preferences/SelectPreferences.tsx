@@ -1,5 +1,5 @@
-import {Box, HStack, Pressable, ScrollView, Text} from 'native-base';
-import React, {useState} from 'react';
+import {Box, HStack, Icon, Pressable, ScrollView, Text} from 'native-base';
+import React, {useEffect, useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import CheckboxChecked from '../../Assets/CheckBoxUnChecked.svg';
 import CheckboxUnChecked from '../../Assets/CheckBoxUnChecked.svg';
@@ -8,8 +8,13 @@ import {fontWeights, fonts} from '../../config/fonts.config';
 import BookOpen from '../../Assets/BookOpen.svg';
 import NotificationBell from '../../Assets/NotificationBell.svg';
 import CheckMark from '../../Assets/CheckMark.svg';
+import {navigate} from '../../Navigators/utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Feather from 'react-native-vector-icons/Feather';
 const SelectPreferences = () => {
   const [isChecked, setisChecked] = useState(false);
+
+  const [microHabbits, setmicroHabbits] = useState([]);
 
   const preferences = [
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
@@ -23,6 +28,81 @@ const SelectPreferences = () => {
   });
   console.log('ischecked', isChecked);
 
+  useEffect(() => {
+    getHabitsData();
+  }, []);
+  const getHabitsData = async () => {
+    try {
+      const storedHabitsData = await AsyncStorage.getItem('habitsData');
+
+      if (storedHabitsData !== null) {
+        // Parse the JSON string back to an array
+        const habitsData = JSON.parse(storedHabitsData);
+
+        console.log('Retrieved habits data:', habitsData);
+
+        // You can now use the habitsData array in your application
+        setmicroHabbits(habitsData);
+      } else {
+        console.log('No habits data found in AsyncStorage');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error retrieving habits data from AsyncStorage:', error);
+      return null;
+    }
+  };
+
+  const habbitsData = [
+    {
+      title: 'Practice deep breathing exercises',
+      action:
+        'Practice deep breathing exercises for 5 minutes in the morning to help manage Asthma symptoms and promote relaxation.',
+      suggested_time: '6:30 AM',
+    },
+    {
+      title: 'Prepare a nutritious breakfast',
+      action:
+        'Prepare a balanced breakfast with whole grains, protein, and fruits in the morning to kickstart your day with energy and focus.',
+      suggested_time: '8:00 AM',
+    },
+    {
+      title: 'Go for a light walk',
+      action:
+        'Go for a light 15-minute walk in the morning to boost circulation, improve lung function, and enhance overall mood.',
+      suggested_time: '9:30 AM',
+    },
+    {
+      title: 'Stretch for flexibility',
+      action:
+        'Engage in a 10-minute stretching routine in the morning to improve flexibility, reduce stiffness, and prevent injuries during exercise.',
+      suggested_time: '10:30 AM',
+    },
+    {
+      title: 'Hydrate with water',
+      action:
+        'Drink a glass of water every hour in the morning to stay hydrated, improve digestion, and support overall well-being.',
+      suggested_time: '5:00 AM - 11:00 AM',
+    },
+    {
+      title: 'Mindful breathing session',
+      action:
+        'Take 5 minutes for a mindful breathing session in the morning to increase awareness, reduce stress, and enhance mental clarity.',
+      suggested_time: '7:00 AM',
+    },
+    {
+      title: 'Plan your workout',
+      action:
+        'Spend 10 minutes planning your exercise routine for the day in the morning to set clear goals and stay motivated.',
+      suggested_time: '8:30 AM',
+    },
+    {
+      title: 'Posture check',
+      action:
+        'Check your posture every hour in the morning to maintain spinal alignment, prevent back pain, and improve breathing patterns.',
+      suggested_time: '5:00 AM - 11:00 AM',
+    },
+  ];
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
@@ -57,7 +137,7 @@ const SelectPreferences = () => {
           mt={'2%'}>
           Hey Aman!👋🏼
         </Text>
-        {preferences?.map(preference => {
+        {habbitsData?.map(preference => {
           return (
             <HStack alignItems={'center'}>
               <Pressable
@@ -66,13 +146,13 @@ const SelectPreferences = () => {
                 onPress={() =>
                   setselectedPreference(prev => ({
                     isChecked: !prev.isChecked,
-                    selected: preference,
+                    selected: preference?.action,
                   }))
                 }>
                 <Box>
                   <CheckboxUnChecked width={40} height={40} />
                   {selectedPreference?.isChecked &&
-                    selectedPreference?.selected === preference && (
+                    selectedPreference?.selected === preference?.action && (
                       <Box
                         position="absolute"
                         top={-4}
@@ -104,12 +184,21 @@ const SelectPreferences = () => {
                   lineHeight={24}
                   fontWeight={fontWeights['600']}
                   fontFamily={fonts.NunitoSans['600']}>
-                  {preference}
+                  {preference.action}
                 </Text>
               </TouchableOpacity>
             </HStack>
           );
         })}
+        <TouchableOpacity
+          onPress={() => navigate('Main', {})}
+          style={{
+            backgroundColor: '#31006F',
+            padding: 12,
+            borderRadius: 20,
+          }}>
+          <Icon as={Feather} name="arrow-right" color={'#fff'} />
+        </TouchableOpacity>
       </ScrollView>
     </Box>
   );

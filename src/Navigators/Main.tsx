@@ -15,6 +15,7 @@ import HelpIcon from '../Assets/HelpBottomTab.svg';
 import {navigate} from './utils';
 import Profile from '../screens/Profile';
 import Login from '../screens/Login';
+import Home from '../screens/Home';
 
 const Tab = createBottomTabNavigator();
 
@@ -163,7 +164,7 @@ const Main = () => {
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
         name="Home"
-        component={Profile}
+        component={Home}
         listeners={{
           focus: e => {
             console.log('focus', e.target?.split('-')[0]);

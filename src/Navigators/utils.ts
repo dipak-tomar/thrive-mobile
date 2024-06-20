@@ -13,6 +13,7 @@ export type RootStackParamList = {
   Profile: undefined;
   ContinueScreen: {fromLogin: boolean};
   Home: undefined;
+  Progress: undefined;
 };
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();

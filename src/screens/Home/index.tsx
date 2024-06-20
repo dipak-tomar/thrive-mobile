@@ -18,6 +18,7 @@ import NotificationBell from '../../Assets/NotificationBell.svg';
 import CheckMark from '../../Assets/CheckMark.svg';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import AlarmModal from './components/AlarmModal';
+import {navigate} from '../../Navigators/utils';
 const Home = () => {
   const [isChecked, setisChecked] = useState(false);
 
@@ -56,9 +57,9 @@ const Home = () => {
           <Box>
             <BookOpen />
           </Box>
-          <Box>
+          <Pressable onPress={() => navigate('Notifications', {})}>
             <NotificationBell />
-          </Box>
+          </Pressable>
         </HStack>
       </HStack>
       <ScrollView>
@@ -148,7 +149,7 @@ const Home = () => {
           );
         })}
       </ScrollView>
-      <AlarmModal isModalVisible={true} />
+      <AlarmModal isModalVisible={false} />
     </Box>
   );
 };

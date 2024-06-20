@@ -5,32 +5,42 @@ import {
   Image,
   Pressable,
   ScrollView,
+  Switch,
   Text,
   VStack,
 } from 'native-base';
-import React from 'react';
+import React, {useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import ToggleSwitch from '../../components/ToggleSwitch';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
+import {fontWeights, fonts} from '../../config/fonts.config';
+import PrivacyIcon from '../../Assets/PrivacyIcon.svg';
+import NotificationIcon from '../../Assets/Notification.svg';
+import LeftArrow from '../../Assets/LeftArrow.svg';
 const Profile = () => {
+  const [isSwitchOn, setIsSwitchOn] = useState(false);
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
         <HStack>
           <ThriveLogo />
-          <Text color={'#31006F'} fontSize={35} ml={'4%'}>
+          <Text
+            color={'#31006F'}
+            fontSize={35}
+            fontWeight={fontWeights['700']}
+            fontFamily={fonts.Poppins['700']}
+            ml={'4%'}>
             Profile{' '}
           </Text>
         </HStack>
       </HStack>
       <ScrollView>
-        <HStack ml={'4%'} mt={'5%'}>
+        <HStack ml={'5%'} mt={'10%'}>
           <Box
-            width={70}
-            height={70}
-            borderRadius={35}
+            width={60}
+            height={60}
+            borderRadius={30}
             alignItems={'center'}
             justifyContent={'center'}
             backgroundColor={'#fff'}>
@@ -45,11 +55,21 @@ const Profile = () => {
               alt="image"
             />
           </Box>
-          <VStack ml={'5%'} justifyContent={'space-around'}>
-            <Text color={'#1D1617'} fontSize={14} fontWeight={'500'}>
+          <VStack ml={'5%'} justifyContent={'space-evenly'}>
+            <Text
+              color={'#1D1617'}
+              fontSize={14}
+              lineHeight={21}
+              fontWeight={fontWeights['500']}
+              fontFamily={fonts.Poppins['500']}>
               AMAN
             </Text>
-            <Text color={'#7B6F72'} fontSize={12} fontWeight={'400'}>
+            <Text
+              color={'#7B6F72'}
+              fontSize={12}
+              lineHeight={18}
+              fontWeight={fontWeights['400']}
+              fontFamily={fonts.Poppins['400']}>
               amandewangan@gmailcom
             </Text>
           </VStack>
@@ -69,7 +89,12 @@ const Profile = () => {
                 justifyContent={'center'}
                 alignItems={'center'}
                 borderRadius={16}>
-                <Text color={'#31006F'} fontSize={14} fontWeight={'500'}>
+                <Text
+                  color={'#31006F'}
+                  fontSize={14}
+                  lineHeight={21}
+                  fontWeight={fontWeights['500']}
+                  fontFamily={fonts.Poppins['500']}>
                   {i.value}
                 </Text>
                 <Text color={'#7B6F72'} fontSize={12} fontWeight={'400'}>
@@ -98,18 +123,25 @@ const Profile = () => {
             Notification
           </Text>
           <HStack justifyContent={'space-between'} mt={'5%'}>
-            <HStack ml={'4%'}>
-              <Icon as={MaterialIcons} name="notifications" />
+            <HStack ml={'4%'} alignItems={'center'}>
+              <Box>
+                <NotificationIcon />
+              </Box>
               <Text
                 color={'#7B6F72'}
                 fontSize={12}
                 fontWeight={'400'}
-                ml={'4%'}>
+                ml={'7%'}>
                 Pop-up Notification
               </Text>
             </HStack>
             <Box mr={'4%'}>
-              <ToggleSwitch />
+              <Switch
+                value={isSwitchOn}
+                size="lg"
+                onTrackColor="#31006F"
+                onValueChange={value => setIsSwitchOn(value)}
+              />
             </Box>
           </HStack>
         </Box>
@@ -131,49 +163,22 @@ const Profile = () => {
             mt={'5%'}>
             Other
           </Text>
+
           <HStack justifyContent={'space-between'} mt={'5%'}>
-            <HStack ml={'4%'}>
-              <Icon as={MaterialIcons} name="notifications" />
+            <HStack ml={'4%'} alignItems={'center'}>
+              <Box>
+                <PrivacyIcon />
+              </Box>
               <Text
                 color={'#7B6F72'}
                 fontSize={12}
                 fontWeight={'400'}
-                ml={'4%'}>
-                Contact Us{' '}
-              </Text>
-            </HStack>
-            <Box mr={'4%'}>
-              <Icon as={AntDesign} name="right" />
-            </Box>
-          </HStack>
-          <HStack justifyContent={'space-between'} mt={'5%'}>
-            <HStack ml={'4%'}>
-              <Icon as={MaterialIcons} name="notifications" />
-              <Text
-                color={'#7B6F72'}
-                fontSize={12}
-                fontWeight={'400'}
-                ml={'4%'}>
+                ml={'7%'}>
                 Privacy Policy
               </Text>
             </HStack>
             <Box mr={'4%'}>
-              <Icon as={AntDesign} name="right" />
-            </Box>
-          </HStack>
-          <HStack justifyContent={'space-between'} mt={'5%'}>
-            <HStack ml={'4%'}>
-              <Icon as={MaterialIcons} name="notifications" />
-              <Text
-                color={'#7B6F72'}
-                fontSize={12}
-                fontWeight={'400'}
-                ml={'4%'}>
-                Settings
-              </Text>
-            </HStack>
-            <Box mr={'4%'}>
-              <Icon as={AntDesign} name="right" />
+              <LeftArrow />
             </Box>
           </HStack>
         </Box>

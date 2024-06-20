@@ -1,4 +1,13 @@
-import {Box, HStack, Icon, Input, ScrollView, Text, VStack} from 'native-base';
+import {
+  Box,
+  HStack,
+  Icon,
+  Input,
+  ScrollView,
+  Text,
+  VStack,
+  Pressable,
+} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import Slider from '@react-native-community/slider';
@@ -16,13 +25,19 @@ import InsuranceIcon from '../../Assets/insurance.svg';
 import MedicalIcon from '../../Assets/MedicalIcon.svg';
 import AskingIcon from '../../Assets/AskingIcon.svg';
 import {navigate} from '../../Navigators/utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Preference = () => {
   const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
   const [medicalCondition, setMedicalCondition] = useState('');
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(5);
   const {height, width} = useWindowDimensions();
   const [heightSliderValue, setHeightSliderValue] = useState(0);
+  const [weightSliderValue, setWeightSliderValue] = useState(0);
+  const [primaryGoals, setprimaryGoals] = useState([]);
+  const [habbits, sethabbits] = useState([]);
+  const [timesOfTheDay, settimesOfTheDay] = useState('');
   const genderOptions = [
     {text: 'Male', icon: <MaleIcon />},
     {text: 'Female', icon: <FemaleIcon />},
@@ -37,7 +52,124 @@ const Preference = () => {
       }, 2000);
     }
   }, [step]);
+  async function callRespellAPI() {
+    const url = 'https://api.respell.ai/v1/run';
+    const headers = {
+      Accept: 'application/json',
+      Authorization: 'Bearer 86915844-c23b-4ab3-bd2b-e98c7902f530',
+      'Content-Type': 'application/json',
+    };
 
+    const body = JSON.stringify({
+      spellId: 'XqhY2Hmp0tJeoGn7_tS5I',
+      spellVersionId: 'knMeqZ0260NQ3MWFOIZh8',
+
+      inputs: {
+        height: Math.floor(heightSliderValue),
+        weight: Math.floor(weightSliderValue),
+        age: age,
+        what_is_your_primary_goal_for_using_habit_builder: primaryGoals,
+        gender: gender,
+        we_recommend_the_following_habits_to_you_which_of_the_following_would_you_recommend:
+          habbits,
+        what_times_of_the_day_are_most_suitable_for_you_to_spend_5_10_minutes_on_a_healthy_habit:
+          timesOfTheDay,
+        any_prior_medical_condition: medicalCondition,
+      },
+    });
+
+    const habbitsData = [
+      {
+        title: 'Practice deep breathing exercises',
+        action:
+          'Practice deep breathing exercises for 5 minutes in the morning to help manage Asthma symptoms and promote relaxation.',
+        suggested_time: '6:30 AM',
+      },
+      {
+        title: 'Prepare a nutritious breakfast',
+        action:
+          'Prepare a balanced breakfast with whole grains, protein, and fruits in the morning to kickstart your day with energy and focus.',
+        suggested_time: '8:00 AM',
+      },
+      {
+        title: 'Go for a light walk',
+        action:
+          'Go for a light 15-minute walk in the morning to boost circulation, improve lung function, and enhance overall mood.',
+        suggested_time: '9:30 AM',
+      },
+      {
+        title: 'Stretch for flexibility',
+        action:
+          'Engage in a 10-minute stretching routine in the morning to improve flexibility, reduce stiffness, and prevent injuries during exercise.',
+        suggested_time: '10:30 AM',
+      },
+      {
+        title: 'Hydrate with water',
+        action:
+          'Drink a glass of water every hour in the morning to stay hydrated, improve digestion, and support overall well-being.',
+        suggested_time: '5:00 AM - 11:00 AM',
+      },
+      {
+        title: 'Mindful breathing session',
+        action:
+          'Take 5 minutes for a mindful breathing session in the morning to increase awareness, reduce stress, and enhance mental clarity.',
+        suggested_time: '7:00 AM',
+      },
+      {
+        title: 'Plan your workout',
+        action:
+          'Spend 10 minutes planning your exercise routine for the day in the morning to set clear goals and stay motivated.',
+        suggested_time: '8:30 AM',
+      },
+      {
+        title: 'Posture check',
+        action:
+          'Check your posture every hour in the morning to maintain spinal alignment, prevent back pain, and improve breathing patterns.',
+        suggested_time: '5:00 AM - 11:00 AM',
+      },
+    ];
+    // await AsyncStorage.setItem('habbitsData', JSON.stringify(habbitsData));
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: body,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      await AsyncStorage.setItem(
+        'habbitsData',
+        JSON.stringify(data?.outputs?.micro_habit_1),
+      );
+      console.log('Response data:', habbitsData);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  const handlePressGoals = (question: string) => {
+    setprimaryGoals(prev => {
+      if (prev.includes(question)) {
+        return prev.filter(goal => goal !== question);
+      } else {
+        return [...prev, question];
+      }
+    });
+  };
+
+  const handlePressHabbits = (question: string) => {
+    sethabbits(prev => {
+      if (prev.includes(question)) {
+        return prev.filter(goal => goal !== question);
+      } else {
+        return [...prev, question];
+      }
+    });
+  };
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <Box ml={'3%'}>
@@ -55,19 +187,23 @@ const Preference = () => {
                 What is your gender?
               </Text>
               <HStack mt={'4%'} alignItems={'center'}>
-                {genderOptions?.map(gender => {
+                {genderOptions?.map(item => {
                   return (
-                    <VStack mx={'1%'} alignItems={'center'}>
-                      <Box>{gender.icon}</Box>
+                    <Pressable
+                      mx={'1%'}
+                      alignItems={'center'}
+                      onPress={() => setGender(item.text)}>
+                      <Box>{item.icon}</Box>
                       <Text
                         fontSize={10}
                         color={'#31006F'}
+                        underline={gender === item.text}
                         mt={'2%'}
                         fontWeight={fontWeights['700']}
                         fontFamily={fonts.NunitoSans['700']}>
-                        {gender.text}
+                        {item.text}
                       </Text>
-                    </VStack>
+                    </Pressable>
                   );
                 })}
               </HStack>
@@ -157,15 +293,15 @@ const Preference = () => {
                     left: (width * 0.82) / 2.1,
                     bottom: 40,
                   }}>
-                  <Text> {`${Math.floor(heightSliderValue)} cm`}</Text>
+                  <Text> {`${Math.floor(weightSliderValue)} kg`}</Text>
                 </Box>
                 <Slider
                   style={{width: width * 0.8, height: 40, marginTop: '12%'}}
                   minimumValue={15}
                   maximumValue={650}
                   step={1}
-                  value={heightSliderValue}
-                  onValueChange={value => setHeightSliderValue(value)}
+                  value={weightSliderValue}
+                  onValueChange={value => setWeightSliderValue(value)}
                   minimumTrackTintColor="#FFFFFF"
                   maximumTrackTintColor="#000000"
                 />
@@ -199,9 +335,12 @@ const Preference = () => {
               ].map(question => {
                 return (
                   <TouchableOpacity
+                    onPress={() => handlePressGoals(question)}
                     style={{
                       width: '90%',
-                      backgroundColor: '#fff',
+                      backgroundColor: !primaryGoals.includes(question)
+                        ? '#fff'
+                        : 'gray',
                       marginTop: '8%',
                       borderRadius: 10,
                       borderWidth: 1,
@@ -250,9 +389,12 @@ const Preference = () => {
               ].map(question => {
                 return (
                   <TouchableOpacity
+                    onPress={() => handlePressHabbits(question)}
                     style={{
                       width: '90%',
-                      backgroundColor: '#fff',
+                      backgroundColor: !habbits.includes(question)
+                        ? '#fff'
+                        : 'gray',
                       marginTop: '8%',
                       borderRadius: 10,
                       borderWidth: 1,
@@ -297,9 +439,11 @@ const Preference = () => {
               ].map(question => {
                 return (
                   <TouchableOpacity
+                    onPress={() => settimesOfTheDay(question)}
                     style={{
                       width: '90%',
-                      backgroundColor: '#fff',
+                      backgroundColor:
+                        timesOfTheDay !== question ? '#fff' : 'gray',
                       marginTop: '8%',
                       borderRadius: 10,
                       borderWidth: 1,
@@ -355,7 +499,10 @@ const Preference = () => {
                 _focus={{backgroundColor: '#fff', borderColor: '#000'}}
               />
               <TouchableOpacity
-                onPress={() => setStep(prev => prev + 1)}
+                onPress={() => {
+                  // callRespellAPI();
+                  setStep(prev => prev + 1);
+                }}
                 style={{
                   backgroundColor: '#31006F',
                   width: '90%',

@@ -6815,6 +6815,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gifted-charts-core@npm:^0.1.4":
+  version: 0.1.6
+  resolution: "gifted-charts-core@npm:0.1.6"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 6c52f5c95467d6ad508f012c2fb82abeae749636c31289734c992fa1138943b997242569fcec70fd25dfc408e501d45e3ee5254cd87d076ed1575ef40d5308f9
+  languageName: node
+  linkType: hard
+
 "glob-parent@npm:^5.1.2":
   version: 5.1.2
   resolution: "glob-parent@npm:5.1.2"
@@ -9957,6 +9967,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-gifted-charts@npm:^1.4.10":
+  version: 1.4.10
+  resolution: "react-native-gifted-charts@npm:1.4.10"
+  dependencies:
+    gifted-charts-core: ^0.1.4
+  peerDependencies:
+    expo-linear-gradient: "*"
+    react: "*"
+    react-native: "*"
+    react-native-linear-gradient: "*"
+    react-native-svg: "*"
+  peerDependenciesMeta:
+    expo-linear-gradient:
+      optional: true
+    react-native-linear-gradient:
+      optional: true
+  checksum: 0b474460a362c6e6359912f2dbb319d94b598e7b95ce9eaf26110da79eb13122b86cbaa753c7e0bb1381b43fce7e9e36fb0e4186ae19b53f3493efaa108cbebc
+  languageName: node
+  linkType: hard
+
 "react-native-safe-area-context@npm:3.3.2":
   version: 3.3.2
   resolution: "react-native-safe-area-context@npm:3.3.2"
@@ -11203,6 +11233,7 @@ __metadata:
     prettier: 2.8.8
     react: 18.2.0
     react-native: 0.74.2
+    react-native-gifted-charts: ^1.4.10
     react-native-safe-area-context: 3.3.2
     react-native-screens: ^3.31.1
     react-native-splash-screen: ^3.3.0
