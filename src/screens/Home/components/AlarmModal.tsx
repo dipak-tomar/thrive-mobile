@@ -1,62 +1,217 @@
 import {Box, Button, HStack, Modal, Switch, Text} from 'native-base';
-import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
+import AnalogClock from 'react-native-clock-analog';
+// import AnalogClock from 'react-native-analog-clock';
 
 const AlarmModal = ({isModalVisible, closeModal}) => {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
+  const [isPressed, setIsPressed] = useState(false);
+  const height = useWindowDimensions().height;
+  const width = useWindowDimensions().width;
 
-  const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const days = [
+    {day: 'S', dayName: 'Sun'},
+    {day: 'M', dayName: 'Mon'},
+    {day: 'T', dayName: 'Tue'},
+    {day: 'W', dayName: 'Wed'},
+    {day: 'T', dayName: 'Thu'},
+    {day: 'F', dayName: 'Fri'},
+    {day: 'S', dayName: 'Sat'},
+  ];
+  const nowDate = () => {
+    const d = new Date();
+    let second = d.getSeconds();
+    let minute = d.getMinutes();
+    let hour = d.getHours();
+    return {second, minute, hour};
+  };
 
+  const useNowTimer = () => {
+    const [time, setTime] = useState(nowDate());
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setTime(nowDate());
+      }, 1000);
+
+      return () => clearInterval(intervalId); // Cleanup interval on unmount
+    }, []);
+
+    return time;
+  };
   const toggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
-  const handleDayPress = day => {
+  // const handleDayPress = day => {
+  //   setSelectedDays(prevSelectedDays =>
+  //     prevSelectedDays.includes(day)
+  //       ? prevSelectedDays.filter(d => d !== day)
+  //       : [...prevSelectedDays, day],
+  //   );
+  // };
+  let options = {
+    width: '300px',
+    border: true,
+    borderColor: '#2e2e2e',
+    baseColor: '#17a2b8',
+    centerColor: '#459cff',
+    centerBorderColor: '#ffffff',
+    handColors: {
+      second: '#d81c7a',
+      minute: '#ffffff',
+      hour: '#ffffff',
+    },
+  };
+  const handleSelect = (dayName: string) => {
     setSelectedDays(prevSelectedDays =>
-      prevSelectedDays.includes(day)
-        ? prevSelectedDays.filter(d => d !== day)
-        : [...prevSelectedDays, day],
+      prevSelectedDays.includes(dayName)
+        ? prevSelectedDays.filter(d => d !== dayName)
+        : [...prevSelectedDays, dayName],
     );
   };
+  console.log('selectedDays=>', selectedDays.includes('Sun'), selectedDays);
+  const {second, minute, hour} = useNowTimer();
+
   return (
     <Modal isOpen={isModalVisible} onClose={closeModal} size="lg">
-      <Modal.Content backgroundColor={'#F6F0FF'}>
-        <Modal.CloseButton />
-        <Modal.Header>Repeat</Modal.Header>
+      <Modal.Content
+        backgroundColor={'#F6F0FF'}
+        borderRadius={20}
+        borderWidth={1}
+        borderColor={'#31006F'}>
+        {/* <Modal.CloseButton /> */}
+
         <Modal.Body>
-          <Text fontSize="sm" color="gray.500">
-            Choose at least 1 day
-          </Text>
-          <HStack justifyContent="space-between" mt={4}>
-            {days.map((day, index) => (
-              <Button
-                key={index}
-                onPress={() => handleDayPress(day)}
-                variant="unstyled"
-                style={[
-                  styles.dayButton,
-                  selectedDays.includes(day) && styles.selectedDayButton,
-                ]}>
+          <Box bgColor={'#F6F0FF'} my={'2%'}>
+            <HStack
+              px={'2%'}
+              justifyContent={'space-between'}
+              alignItems={'center'}>
+              <Text
+                fontSize={14}
+                fontWeight={700}
+                lineHeight={20}
+                fontFamily={'Nunito Sans'}
+                color="#31006F">
+                Repeat
+              </Text>
+              <Text
+                fontSize={10}
+                fontWeight={400}
+                lineHeight={14}
+                fontFamily={'Nunito Sans'}
+                color="#31006F">
+                Choose at least 1 day
+              </Text>
+            </HStack>
+            <HStack mx={2} justifyContent="space-between" mt={4}>
+              {days.map((item, index) => (
+                // <Button
+                //   key={index}
+                //   onPress={() => handleDayPress(day)}
+                //   variant="unstyled"
+                //   style={[
+                //     styles.dayButton,
+                //     selectedDays.includes(day) && styles.selectedDayButton,
+                //   ]}>
+                <TouchableOpacity
+                  onPress={item => {
+                    handleSelect(item.dayName);
+                  }}>
+                  <Box
+                    height={27}
+                    width={27}
+                    borderRadius={'full'}
+                    bgColor={
+                      selectedDays.includes(item.dayName)
+                        ? '#31006F'
+                        : '#F6F0FF'
+                    }
+                    borderWidth={1}
+                    borderColor={'#31006F'}
+                    alignItems={'center'}
+                    justifyContent={'center'}>
+                    <Text
+                      style={[
+                        styles.dayButtonText,
+                        selectedDays.includes(item.dayName) &&
+                          styles.selectedDayButtonText,
+                      ]}>
+                      {item.day}
+                    </Text>
+                  </Box>
+                </TouchableOpacity>
+                // </Button>
+              ))}
+            </HStack>
+            <Box
+              borderWidth={1}
+              // borderColor={'#31006F'}
+              borderRadius={'full'}
+              bgColor={'amber.200'}
+              alignSelf={'center'}
+              shadow={6}
+              mt={5}>
+              <AnalogClock
+                colorClock="#F6F0FF"
+                colorNumber="#F6F0FF"
+                colorCenter="#807D7D"
+                colorHour="#1400FF"
+                colorMinutes="#807D7D"
+                colorSeconds="#FF74E9"
+                borderColor="#0000FF" 
+                numberFontSize={20}
+                // hour={hour}
+                // minutes={minute}
+                // seconds={second}
+                showSeconds
+              />
+            </Box>
+            <HStack
+              width={width * 0.68}
+              height={height * 0.05}
+              justifyContent={'space-between'}
+              mt={5}
+              alignSelf={'center'}
+              alignItems="center"
+              bgColor={'#FFFFFF'}
+              borderColor={'#E7E7E7'}
+              borderRadius={8}
+              shadow={2}
+              borderWidth={1}>
+              <HStack>
                 <Text
-                  style={[
-                    styles.dayButtonText,
-                    selectedDays.includes(day) && styles.selectedDayButtonText,
-                  ]}>
-                  {day}
+                  fontSize={14}
+                  fontWeight={700}
+                  lineHeight={14}
+                  fontFamily={'Nunito Sans'}
+                  ml={2}>
+                  11:15
                 </Text>
-              </Button>
-            ))}
-          </HStack>
-          <Box mt={5}>{/* <Clock /> Custom clock component */}</Box>
-          <HStack
-            mt={5}
-            alignItems="center"
-            bgColor={'gray.300'}
-            borderWidth={1}>
-            <Text fontSize="xl" mr={2}>
-              11:15 AM
-            </Text>
-            <Switch value={isSwitchOn} onValueChange={toggleSwitch} />
-          </HStack>
+                <Text
+                  fontSize={10}
+                  fontWeight={700}
+                  lineHeight={12}
+                  fontFamily={'Nunito Sans'}
+                  ml={1}
+                  color={'#C5C5C5'}>
+                  AM
+                </Text>
+              </HStack>
+              <Switch
+                onTrackColor="black"
+                offTrackColor="gray.200"
+                value={isSwitchOn}
+                onValueChange={toggleSwitch}
+              />
+            </HStack>
+          </Box>
         </Modal.Body>
       </Modal.Content>
     </Modal>

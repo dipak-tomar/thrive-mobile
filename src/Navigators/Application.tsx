@@ -15,7 +15,9 @@ import ContinueScrren from '../screens/Login/ContinueScrren';
 import auth from '@react-native-firebase/auth';
 import Main from './Main';
 import Home from '../screens/Home';
-import Progress from '../screens/Progress';
+
+import messaging from '@react-native-firebase/messaging';
+import ProgressScreen from '../screens/Progress/ProgressScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +32,12 @@ const ApplicationNavigator = () => {
     if (initializing) setInitializing(false);
   }
 
+  const getFcmToken = async () => {
+    const fcmToken = await messaging().getToken();
+    console.log('FCM Token:', fcmToken);
+  };
   useEffect(() => {
+    getFcmToken();
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, []);
@@ -84,7 +91,7 @@ const ApplicationNavigator = () => {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="ContinueScreen" component={ContinueScrren} />
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Progress" component={Progress} />
+        <Stack.Screen name="ProgressScreen" component={ProgressScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

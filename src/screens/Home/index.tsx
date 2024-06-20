@@ -21,6 +21,7 @@ import AlarmModal from './components/AlarmModal';
 import {navigate} from '../../Navigators/utils';
 const Home = () => {
   const [isChecked, setisChecked] = useState(false);
+  const [openReminder, setOpenReminder] = useState(false);
 
   const preferences = [
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
@@ -131,25 +132,27 @@ const Home = () => {
                     fontFamily={fonts.NunitoSans['600']}>
                     {preference}
                   </Text>
-                  <HStack justifyContent={'flex-end'}>
-                    <Text
-                      color={'#31006F'}
-                      fontSize={12}
-                      lineHeight={16}
-                      fontWeight={fontWeights['600']}
-                      fontFamily={fonts.NunitoSans['600']}
-                      underline>
-                      Set Reminder
-                    </Text>
-                    <Icon as={IonIcons} name="alarm-outline" ml={'1%'} />
-                  </HStack>
+                  <Pressable onPress={() => setOpenReminder(true)}>
+                    <HStack justifyContent={'flex-end'}>
+                      <Text
+                        color={'#31006F'}
+                        fontSize={12}
+                        lineHeight={16}
+                        fontWeight={fontWeights['600']}
+                        fontFamily={fonts.NunitoSans['600']}
+                        underline>
+                        Set Reminder
+                      </Text>
+                      <Icon as={IonIcons} name="alarm-outline" ml={'1%'} />
+                    </HStack>
+                  </Pressable>
                 </VStack>
               </TouchableOpacity>
             </HStack>
           );
         })}
       </ScrollView>
-      <AlarmModal isModalVisible={false} />
+      <AlarmModal isModalVisible={openReminder} closeModal={!openReminder} />
     </Box>
   );
 };
