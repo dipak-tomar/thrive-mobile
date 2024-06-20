@@ -70,19 +70,19 @@ const Main = () => {
           <HomeIcon height={29} width={29} />
         );
       } else if (route.name === 'Profile') {
-        return focused ?
-        (<Box
-        w={'65%'}
-        alignItems={'center'}
-        justifyContent={'center'}
-        py={1}
-        borderRadius={'full'}
-        backgroundColor={focused ? '#f0e5ff' : 'white'}>
-        <ProfileIcon height={29} width={29} />
-      </Box> 
-      ) :(
-        <ProfileIcon height={29} width={29} />
-      );
+        return focused ? (
+          <Box
+            w={'65%'}
+            alignItems={'center'}
+            justifyContent={'center'}
+            py={1}
+            borderRadius={'full'}
+            backgroundColor={focused ? '#f0e5ff' : 'white'}>
+            <ProfileIcon height={29} width={29} />
+          </Box>
+        ) : (
+          <ProfileIcon height={29} width={29} />
+        );
       } else if (route.name === 'Progress') {
         return focused ? (
           <Box

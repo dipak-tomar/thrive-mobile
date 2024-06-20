@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import CheckboxChecked from '../../Assets/CheckBoxUnChecked.svg';
 import CheckboxUnChecked from '../../Assets/CheckBoxUnChecked.svg';
-import {TouchableOpacity, useWindowDimensions} from 'react-native';
+import {Linking, TouchableOpacity, useWindowDimensions} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
 import BookOpen from '../../Assets/BookOpen.svg';
 import NotificationBell from '../../Assets/NotificationBell.svg';
@@ -116,8 +116,13 @@ const SelectPreferences = () => {
   ];
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <HStack px={'2%'} width={width} mt={'4%'} alignItems={'center'} >
-        <HStack >
+      <HStack
+        px={'2%'}
+        width={width}
+        mt={'4%'}
+        alignItems={'center'}
+        justifyContent={'space-between'}>
+        <HStack maxW={width * 0.8}>
           <ThriveLogo />
           <Text
             color={'#31006F'}
@@ -131,12 +136,17 @@ const SelectPreferences = () => {
           </Text>
         </HStack>
         <HStack>
-          <Box>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(
+                'https://capable-ricotta-490.notion.site/Thrive-Knowledge-Articles-b6ddc5c2c31f4f948d4d8abc160dbf85?pvs=4',
+              );
+            }}>
             <BookOpen />
-          </Box>
-          <Box>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigate('Notifications', {})}>
             <NotificationBell />
-          </Box>
+          </TouchableOpacity>
         </HStack>
       </HStack>
       <ScrollView>
@@ -231,8 +241,10 @@ const SelectPreferences = () => {
             marginTop: '4%',
             marginBottom: '5%',
           }}>
-          <HStack alignSelf= {'center'}
-            justifyContent={ 'space-between'} px={'2%'} >
+          <HStack
+            alignSelf={'center'}
+            justifyContent={'space-between'}
+            px={'2%'}>
             <Text
               fontSize={14}
               textAlign={'justify'}
@@ -242,7 +254,13 @@ const SelectPreferences = () => {
               color={'white'}>
               Proceed
             </Text>
-            <Icon ml={'2%'} as={Feather} size={5} name="arrow-right" color={'#fff'} />
+            <Icon
+              ml={'2%'}
+              as={Feather}
+              size={5}
+              name="arrow-right"
+              color={'#fff'}
+            />
           </HStack>
         </TouchableOpacity>
         {Loading ? <Loader /> : null}

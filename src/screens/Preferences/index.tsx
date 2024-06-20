@@ -27,6 +27,8 @@ import AskingIcon from '../../Assets/AskingIcon.svg';
 import {navigate} from '../../Navigators/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Loader} from '../../components/Loader';
+import firestore from '@react-native-firebase/firestore';
+import {useIsFocused} from '@react-navigation/native';
 
 const Preference = () => {
   const [age, setAge] = useState('');
@@ -40,6 +42,8 @@ const Preference = () => {
   const [habbits, sethabbits] = useState([]);
   const [timesOfTheDay, settimesOfTheDay] = useState('');
   const [loading, setloading] = useState(false);
+  const [apiConfig, setApiConfig] = useState({});
+  const isFocused = useIsFocused();
   const genderOptions = [
     {text: 'Male', icon: <MaleIcon />},
     {text: 'Female', icon: <FemaleIcon />},
@@ -55,11 +59,35 @@ const Preference = () => {
     }
   }, [step]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const documentSnapshot = await firestore()
+          .collection('api_config')
+          .doc('api_key')
+          .get();
+
+        if (documentSnapshot.exists) {
+          console.log('api config data', documentSnapshot.data());
+          setApiConfig(documentSnapshot.data());
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error getting document:', error);
+      } finally {
+      }
+    };
+
+    fetchData();
+  }, [isFocused]);
+
   async function callRespellAPI() {
     const url = 'https://api.respell.ai/v1/run';
+
     const headers = {
       Accept: 'application/json',
-      Authorization: 'Bearer 86915844-c23b-4ab3-bd2b-e98c7902f530',
+      Authorization: `Bearer ${apiConfig?.bearer_token}`,
       'Content-Type': 'application/json',
     };
 
@@ -202,12 +230,12 @@ const Preference = () => {
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <ScrollView>
-      <Box mt={'2%'} px={'4%'} >
-        <ThriveLogo />
-      </Box>
+        <Box mt={'2%'} px={'4%'}>
+          <ThriveLogo />
+        </Box>
         {step === 0 ? (
           <>
-            <Box alignItems={'center'} mt={'5%'} >
+            <Box alignItems={'center'} mt={'5%'}>
               <Text
                 color={'#31006F'}
                 fontSize={30}
@@ -228,8 +256,16 @@ const Preference = () => {
                         color={'#31006F'}
                         underline={gender === item.text}
                         mt={'2%'}
-                        fontWeight={fontWeights['700']}
-                        fontFamily={fonts.NunitoSans['700']}>
+                        fontWeight={
+                          gender === item.text
+                            ? fontWeights['900']
+                            : fontWeights['700']
+                        }
+                        fontFamily={
+                          gender === item.text
+                            ? fonts.NunitoSans['900']
+                            : fonts.NunitoSans['700']
+                        }>
                         {item.text}
                       </Text>
                     </Pressable>
@@ -267,7 +303,7 @@ const Preference = () => {
             <HStack
               alignItems={'center'}
               mt={'8%'}
-                // bgColor={'amber.400'}
+              // bgColor={'amber.400'}
               justifyContent={'center'}>
               <Box>
                 <SmallHeight />
@@ -521,9 +557,11 @@ const Preference = () => {
                 bgColor={'#fff'}
                 ml={'2%'}
                 mt={'7%'}
+                fontSize={18}
+                // px={'7%'}
                 borderRadius={15}
                 placeholder="Asthama, Diabetes, etc."
-                paddingLeft={95}
+                // paddingLeft={95}
                 height={100}
                 _focus={{backgroundColor: '#fff', borderColor: '#000'}}
               />

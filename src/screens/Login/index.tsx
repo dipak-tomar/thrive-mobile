@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Box, Checkbox, HStack, Input, Text, VStack} from 'native-base';
+import {
+  Box,
+  Checkbox,
+  HStack,
+  Input,
+  Text,
+  VStack,
+  useToast,
+} from 'native-base';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import {TouchableOpacity, useWindowDimensions} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
@@ -15,6 +23,7 @@ const Login = () => {
   const [loading, setloading] = useState(false);
   const height = useWindowDimensions().height;
   const width = useWindowDimensions().width;
+  const toast = useToast();
 
   const signInUser = async () => {
     setloading(true);
@@ -29,15 +38,21 @@ const Login = () => {
     } catch (error) {
       if (error.code === 'auth/user-not-found') {
         setloading(false);
-        console.log('No user found with that email address!');
+        toast.show({
+          description: 'No user found with that email address!',
+          duration: 2000,
+        });
       } else if (error.code === 'auth/wrong-password') {
         setloading(false);
+        toast.show({description: 'Incorrect password!', duration: 2000});
         console.log('Incorrect password!');
       } else if (error.code === 'auth/invalid-email') {
         setloading(false);
+        toast.show({description: 'Invalid email address!', duration: 2000});
         console.log('Invalid email address!');
       } else {
         setloading(false);
+
         console.log(error.message);
       }
     }
@@ -45,7 +60,7 @@ const Login = () => {
 
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <HStack px={'3%'} width={width} mt={'4%'}  alignItems={'center'}>
+      <HStack px={'3%'} width={width} mt={'4%'} alignItems={'center'}>
         <ThriveLogo />
         <Text
           color={'#31006F'}
@@ -59,7 +74,7 @@ const Login = () => {
       </HStack>
 
       {/* Email/ Phone Number */}
-      <VStack  mt={'15%'}>
+      <VStack mt={'15%'}>
         <Text
           color={'#31006F'}
           fontSize={18}
@@ -115,7 +130,7 @@ const Login = () => {
 
       <TouchableOpacity
         onPress={() => {
-          navigate('ContinueScreen', {fromLogin: true});
+          signInUser();
         }}
         style={{
           backgroundColor: '#31006F',

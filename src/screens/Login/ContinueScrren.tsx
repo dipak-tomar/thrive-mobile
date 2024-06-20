@@ -1,5 +1,5 @@
 import {Box, HStack, Text} from 'native-base';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {fontWeights, fonts} from '../../config/fonts.config';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import ContinueScreen1 from '../../Assets/ContinueScreen1.svg';
@@ -13,9 +13,19 @@ const ContinueScrren = () => {
    const {fromLogin} = route?.params;
    console.log("routte",route?.params?.fromLogin);
    const width = useWindowDimensions().width;
+
+   useEffect(() => {
+    if(!fromLogin){
+setTimeout(() => {
+  navigate("Preference",{})
+},1000);
+    }
+    
+   }, [fromLogin])
+   
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <HStack width={width} mt={'4%'} px={'4%'} alignItems={'center'} >
+      <HStack width={width } mt={'4%'} px={'4%'} alignItems={'center'} >
         <ThriveLogo />
         {/* <Text
           color={'#31006F'}
@@ -27,8 +37,8 @@ const ContinueScrren = () => {
           Login
         </Text> */}
       </HStack>
-     {fromLogin ? ( <Box alignSelf={"center"} mt={"35%"}>
-        <Box>
+     {fromLogin ? ( <Box alignSelf={"center"} mt={"35%"} >
+        <Box alignSelf={'center'} mb={'5%'}>
          <ContinueScreen1 /> 
         </Box>
         <Text
@@ -37,9 +47,10 @@ const ContinueScrren = () => {
           fontWeight={fontWeights['400']}
           fontFamily={fonts.NunitoSans['400']}
           textAlign={'center'}
+          maxW={width * 0.65}
           // lineHeight={24}
           >
-         Welcome Back!! We Missed You💜
+         Welcome Back!!  We Missed You💜
         </Text>
       </Box>) : 
       (<Box alignSelf={"center"} mt={"14%"}>

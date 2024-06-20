@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Box, Checkbox, HStack, Input, Text, VStack} from 'native-base';
+import {
+  Box,
+  Checkbox,
+  HStack,
+  Input,
+  Text,
+  VStack,
+  useToast,
+} from 'native-base';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import {TouchableOpacity} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
@@ -13,6 +21,7 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setloading] = useState(false);
+  const toast = useToast();
   const signUpUser = async () => {
     setloading(true);
     try {
@@ -24,25 +33,34 @@ const SignUp = () => {
         displayName: fullName,
       });
       await AsyncStorage.setItem('currentUser', JSON.stringify(response.user));
-      navigate('Main', {});
+      navigate('ContinueScreen', {fromLogin: false});
       console.log('User account created & signed in!', response);
       setloading(false);
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
         setloading(false);
+        toast.show({
+          description: 'That email address is already in use!',
+          duration: 2000,
+        });
         console.log('That email address is already in use!');
       } else if (error.code === 'auth/invalid-email') {
         setloading(false);
+        toast.show({
+          description: 'That email address is invalid!',
+          duration: 2000,
+        });
         console.log('That email address is invalid!');
       } else {
         setloading(false);
+
         console.error(error);
       }
     }
   };
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
-      <HStack px={'4%'} mt={'4%'} alignItems={'center'} >
+      <HStack px={'4%'} mt={'4%'} alignItems={'center'}>
         <ThriveLogo />
         <Text
           color={'#31006F'}
@@ -159,7 +177,10 @@ const SignUp = () => {
         </Checkbox>
       </HStack>
       <TouchableOpacity
-        onPress={() => signUpUser()}
+        onPress={() => {
+          // signUpUser();
+          navigate('ContinueScreen', {fromLogin: false});
+        }}
         style={{
           backgroundColor: '#31006F',
           width: '85%',

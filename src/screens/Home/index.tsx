@@ -20,7 +20,6 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import AlarmModal from './components/AlarmModal';
 import {navigate} from '../../Navigators/utils';
 const Home = () => {
-  const [isChecked, setisChecked] = useState(false);
   const [openReminder, setOpenReminder] = useState(false);
   const height = useWindowDimensions().height;
   const width = useWindowDimensions().width;
@@ -76,7 +75,7 @@ const Home = () => {
     },
   ];
   const [selectedPreferences, setSelectedPreferences] = useState([]);
-  console.log('ischecked', isChecked);
+
   const togglePreference = preference => {
     setSelectedPreferences(prevSelected => {
       if (prevSelected.includes(preference.action)) {
@@ -167,7 +166,7 @@ const Home = () => {
 
               <TouchableOpacity
                 style={{
-                  width: '80%',
+                  width: '75%',
                   backgroundColor: isChecked ? '#ECF8E9' : '#F8F8F8',
                   // backgroundColor: 'amber.300' ,
                   marginTop: '8%',
