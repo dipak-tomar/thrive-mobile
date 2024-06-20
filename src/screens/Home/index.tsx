@@ -11,7 +11,7 @@ import React, {useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import CheckboxChecked from '../../Assets/CheckBoxUnChecked.svg';
 import CheckboxUnChecked from '../../Assets/CheckBoxUnChecked.svg';
-import {TouchableOpacity} from 'react-native';
+import {Linking, TouchableOpacity} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
 import BookOpen from '../../Assets/BookOpen.svg';
 import NotificationBell from '../../Assets/NotificationBell.svg';
@@ -105,9 +105,14 @@ const Home = () => {
           </Text>
         </HStack>
         <HStack>
-          <Box>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(
+                'https://capable-ricotta-490.notion.site/Thrive-Knowledge-Articles-b6ddc5c2c31f4f948d4d8abc160dbf85?pvs=4',
+              );
+            }}>
             <BookOpen />
-          </Box>
+          </TouchableOpacity>
           <Pressable onPress={() => navigate('Notifications', {})}>
             <NotificationBell />
           </Pressable>

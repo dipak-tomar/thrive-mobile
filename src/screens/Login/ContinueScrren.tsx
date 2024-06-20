@@ -5,9 +5,14 @@ import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import ContinueScreen1 from '../../Assets/ContinueScreen1.svg';
 import ContinueScreen2 from '../../Assets/ContinueScreen2.svg';
 import {TouchableOpacity} from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import {navigate} from '../../Navigators/utils';
 
 const ContinueScrren = () => {
-    const [fromLogin] = useState(0)
+   const route = useRoute();
+   const {fromLogin} = route?.params;
+   console.log("routte",route?.params?.fromLogin);
+   
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack mt={'4%'} ml={'4%'} alignItems={'center'}>
@@ -22,7 +27,7 @@ const ContinueScrren = () => {
           Login
         </Text> */}
       </HStack>
-     {fromLogin !== 0 ? ( <Box alignSelf={"center"} mt={"35%"}>
+     {fromLogin ? ( <Box alignSelf={"center"} mt={"35%"}>
         <Box>
          <ContinueScreen1 /> 
         </Box>
@@ -50,16 +55,18 @@ const ContinueScrren = () => {
         </Text>
       </Box>)}
 
-     {fromLogin !== 0 && <TouchableOpacity
+     {fromLogin  && <TouchableOpacity
+     
         style={{
           backgroundColor: '#31006F',
           width: '85%',
           marginHorizontal: '6%',
-          marginTop: '40%',
+          marginTop: '30%',
           borderRadius: 35,
           padding: 17,
           alignItems: 'center',
-        }}>
+        }}
+        onPress={() => navigate("Main",{})}>
         <Text color={'#fff'}>Continue to Thrive >>>></Text>
       </TouchableOpacity>}
     </Box>

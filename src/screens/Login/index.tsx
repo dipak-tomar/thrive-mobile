@@ -20,7 +20,7 @@ const Login = () => {
       console.log('User signed in!', response);
       await AsyncStorage.setItem('currentUser', JSON.stringify(response.user));
       if (response) {
-        navigate('Main', {});
+        navigate('ContinueScreen', {fromLogin: true});
       }
       setloading(false);
     } catch (error) {
@@ -111,7 +111,9 @@ const Login = () => {
       </VStack>
 
       <TouchableOpacity
-        onPress={() => signInUser()}
+        onPress={() => {
+          navigate('ContinueScreen', {fromLogin: true});
+        }}
         style={{
           backgroundColor: '#31006F',
           width: '85%',
