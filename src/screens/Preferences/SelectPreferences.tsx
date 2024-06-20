@@ -45,9 +45,14 @@ const SelectPreferences = () => {
         const habbitsString = await AsyncStorage.getItem('habbitsData');
         if (habbitsString !== null) {
           const habbitsInfo = JSON.parse(habbitsString);
+          console.log('habbitsInfo', habbitsInfo);
 
           setmicroHabbits(habbitsInfo);
-          console.log('Data retrieved from AsyncStorage', habbitsInfo);
+          console.log(
+            'Data retrieved from AsyncStorage',
+
+            microHabbits,
+          );
         } else {
           setmicroHabbits([]); // Ensure microHabbits is an array if there's no data
         }

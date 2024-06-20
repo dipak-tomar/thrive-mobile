@@ -102,7 +102,7 @@ const Preference = () => {
     try {
       const querySnapshot = await firestore()
         .collection('users')
-        .where('email', '==', 'dipakkumartomar29@gmail.com')
+        .where('email', '==', user?.email)
         .get();
 
       if (!querySnapshot.empty) {
@@ -211,54 +211,55 @@ const Preference = () => {
         suggested_time: '3:00 PM',
       },
     ];
-    try {
-      await AsyncStorage.setItem('habbitsData', JSON.stringify(habbitsData));
-      await updateUserByEmail();
-      console.log('Data saved to AsyncStorage successfully.');
-      setStep(prev => prev + 1);
-      setloading(false);
-    } catch (storageError) {
-      console.error('Error saving data to AsyncStorage:', storageError);
-      setloading(false);
-    }
     // try {
-    //   const response = await fetch(url, {
-    //     method: 'POST',
-    //     headers: headers,
-    //     body: body,
-    //   });
-
-    //   if (!response.ok) {
-    //     throw new Error(`HTTP error! Status: ${response.status}`);
-    //   }
-
-    //   const data = await response.json();
-    //   console.log('Response data:', data);
-
-    //   // Check the structure of the data before attempting to store it
-    //   if (data && data.outputs && data.outputs.micro_habit_1) {
-    //     const microHabits = data.outputs.micro_habit_1;
-    //     console.log('Micro habits to save:', microHabits);
-
-    //     try {
-    //       await AsyncStorage.setItem(
-    //         'habbitsData',
-    //         JSON.stringify(microHabits),
-    //       );
-    //       console.log('Data saved to AsyncStorage successfully.');
-    //       setStep(prev => prev + 1);
-    //     } catch (storageError) {
-    //       console.error('Error saving data to AsyncStorage:', storageError);
-    //     }
-    //   } else {
-    //     console.error('Unexpected data structure:', data);
-    //   }
-
+    //   await AsyncStorage.setItem('habbitsData', JSON.stringify(habbitsData));
+    //   await updateUserByEmail();
+    //   console.log('Data saved to AsyncStorage successfully.');
+    //   setStep(prev => prev + 1);
     //   setloading(false);
-    // } catch (error) {
+    // } catch (storageError) {
+    //   console.error('Error saving data to AsyncStorage:', storageError);
     //   setloading(false);
-    //   console.error('Error:', error);
     // }
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: body,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Response data:', data);
+
+      // Check the structure of the data before attempting to store it
+      if (data && data.outputs && data.outputs.micro_habit_1) {
+        const microHabits = data.outputs.micro_habit_1;
+        console.log('Micro habits to save:', microHabits);
+
+        try {
+          await AsyncStorage.setItem(
+            'habbitsData',
+            JSON.stringify(microHabits),
+          );
+          await updateUserByEmail();
+          console.log('Data saved to AsyncStorage successfully.');
+          setStep(prev => prev + 1);
+        } catch (storageError) {
+          console.error('Error saving data to AsyncStorage:', storageError);
+        }
+      } else {
+        console.error('Unexpected data structure:', data);
+      }
+
+      setloading(false);
+    } catch (error) {
+      setloading(false);
+      console.error('Error:', error);
+    }
   }
 
   const handlePressGoals = (question: string) => {
@@ -656,28 +657,38 @@ const Preference = () => {
         )}
 
         {step !== 4 && step !== 5 && (
-          <HStack  alignSelf={'center'} mt={'6%'} mb={'8%'}>
+          <HStack alignSelf={'center'} mt={'6%'} mb={'8%'}>
             <TouchableOpacity
               onPress={() => setStep(prev => prev + 1)}
               style={{
                 // height: width*0.12 ,
-                width : width*0.3 , 
+                width: width * 0.3,
                 backgroundColor: '#31006F',
                 // padding: 12,
-                paddingHorizontal : '2%' ,
+                paddingHorizontal: '2%',
                 borderRadius: 12,
               }}>
-                <HStack justifyContent={'center'} alignSelf={'center'} py={'6%'} px={'4%'}>
-                 <Text
-              color={'white'}
-              fontSize={16}
-              lineHeight={20}
-              fontWeight={fontWeights['600']}
-              fontFamily={fonts.NunitoSans['600']}>
-             Proceed
-            </Text>
-              <Icon ml={'1'} mt={'1'} as={Feather} name="arrow-right" color={'#fff'} />
-            </HStack>
+              <HStack
+                justifyContent={'center'}
+                alignSelf={'center'}
+                py={'6%'}
+                px={'4%'}>
+                <Text
+                  color={'white'}
+                  fontSize={16}
+                  lineHeight={20}
+                  fontWeight={fontWeights['600']}
+                  fontFamily={fonts.NunitoSans['600']}>
+                  Proceed
+                </Text>
+                <Icon
+                  ml={'1'}
+                  mt={'1'}
+                  as={Feather}
+                  name="arrow-right"
+                  color={'#fff'}
+                />
+              </HStack>
             </TouchableOpacity>
           </HStack>
         )}

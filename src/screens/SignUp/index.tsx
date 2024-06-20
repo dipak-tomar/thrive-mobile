@@ -188,8 +188,8 @@ const SignUp = () => {
       </HStack>
       <TouchableOpacity
         onPress={() => {
-          // signUpUser();
-          navigate('ContinueScreen', {fromLogin: false});
+          signUpUser();
+          // navigate('ContinueScreen', {fromLogin: false});
         }}
         style={{
           backgroundColor: '#31006F',
