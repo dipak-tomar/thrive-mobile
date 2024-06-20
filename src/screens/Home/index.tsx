@@ -23,6 +23,7 @@ import {navigate} from '../../Navigators/utils';
 import firestore from '@react-native-firebase/firestore';
 import {useIsFocused} from '@react-navigation/native';
 import {AsyncStorage} from 'react-native';
+import {getItem} from '../../config/asyncStorage';
 const Home = () => {
   const [openReminder, setOpenReminder] = useState(false);
   const height = useWindowDimensions().height;
@@ -32,37 +33,32 @@ const Home = () => {
   const [user, setuser] = useState({});
   const toast = useToast();
   const [microHabbits, setmicroHabbits] = useState([]);
+  const getUserByEmail = async () => {
+    try {
+      const userinfo = await getItem('currentUser');
+      console.log('userinfo', userinfo);
 
+      const querySnapshot = await firestore()
+        .collection('users')
+        .where('email', '==', userinfo?.email)
+        .get();
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0].data();
+        setuserData(userDoc);
+        console.log('User document retrieved:', userDoc);
+      } else {
+        console.log('No user found with this email.');
+        setuserData(null);
+      }
+    } catch (error) {
+      console.error('Error getting user document:', error);
+    }
+  };
   useEffect(() => {
-    async function getCurrentUser() {
-      try {
-        const userString = await AsyncStorage.getItem('currentUser');
-        if (userString) {
-          const userInfo = JSON.parse(userString);
-          setuser(userInfo);
-
-          console.log('User retrieved from AsyncStorage', userInfo);
-        }
-      } catch (error) {
-        console.error('Error retrieving user from AsyncStorage', error);
-      }
+    if (isFocused) {
+      getUserByEmail();
     }
-    async function getSelectedPrefernces() {
-      try {
-        const updatedSelectedPreferences = await AsyncStorage.getItem(
-          'habbitsData',
-        );
-        if (updatedSelectedPreferences) {
-          const userInfo = JSON.parse(updatedSelectedPreferences);
-          setmicroHabbits(userInfo);
-          console.log('User retrieved from AsyncStorage', userInfo);
-        }
-      } catch (error) {
-        console.error('Error retrieving user from AsyncStorage', error);
-      }
-    }
-    getCurrentUser();
-    getSelectedPrefernces();
   }, [isFocused]);
 
   const preferences = [
@@ -116,18 +112,14 @@ const Home = () => {
     },
   ];
 
-  useEffect(() => {
-    if (user) {
-      getUserByEmail();
-    }
-  }, [user]);
-
   const [selectedPreferences, setSelectedPreferences] = useState([]);
   const updateUserByEmail = async updatedSelectedData => {
     try {
+      const userinfo = await getItem('currentUser');
+      console.log('userinfo', userinfo);
       const querySnapshot = await firestore()
         .collection('users')
-        .where('email', '==', 'dipakkumartomar29@gmail.com')
+        .where('email', '==', userinfo?.email)
         .get();
 
       if (!querySnapshot.empty) {
@@ -164,28 +156,6 @@ const Home = () => {
       }
     });
     await updateUserByEmail([...notPresent, preference]);
-  };
-
-  const getUserByEmail = async () => {
-    try {
-      console.log('userinfo', user);
-
-      const querySnapshot = await firestore()
-        .collection('users')
-        .where('email', '==', user?.email)
-        .get();
-
-      if (!querySnapshot.empty) {
-        const userDoc = querySnapshot.docs[0].data();
-        setuserData(userDoc);
-        console.log('User document retrieved:', userDoc);
-      } else {
-        console.log('No user found with this email.');
-        setuserData(null);
-      }
-    } catch (error) {
-      console.error('Error getting user document:', error);
-    }
   };
 
   const getDayAbbreviation = date => {
@@ -247,7 +217,30 @@ const Home = () => {
           mt={'2%'}>
           Hey Aman!👋🏼
         </Text>
-        {preferences?.map(preference => {
+        {userData?.selected_habbits?.length === 0 ||
+          (!userData?.selected_habbits && (
+            <Box
+              height={height * 0.2}
+              width={width * 0.6}
+              alignSelf={'center'}
+              justifyContent={'center'}
+              borderRadius={12}
+              borderColor={'gray.400'}
+              borderWidth={1}
+              mt={'5%'}
+              bgColor={'gray.200'}>
+              <Text
+                color={'#31006F'}
+                fontSize={18}
+                textAlign={'center'}
+                lineHeight={24}
+                fontWeight={fontWeights['600']}
+                fontFamily={fonts.NunitoSans['600']}>
+                No Habbits Found !!
+              </Text>
+            </Box>
+          ))}
+        {userData?.selected_habbits?.map(preference => {
           const isChecked = selectedPreferences.some(
             item => item.action === preference.action,
           );
@@ -364,29 +357,31 @@ const Home = () => {
             </HStack>
           );
         })}
-        <TouchableOpacity
-          onPress={() => {
-            console.log('pressed');
-          }}>
-          <Box
-            borderRadius={8}
-            mt={'5%'}
-            alignSelf={'center'}
-            height={height * 0.07}
-            width={width * 0.45}
-            alignItems={'center'}
-            justifyContent={'center'}
-            bgColor={'#31006F'}>
-            <Text
-              color={'white'}
-              fontSize={16}
-              lineHeight={20}
-              fontWeight={fontWeights['600']}
-              fontFamily={fonts.NunitoSans['600']}>
-              Continue
-            </Text>
-          </Box>
-        </TouchableOpacity>
+        {userData?.selected_habbits && (
+          <TouchableOpacity
+            onPress={() => {
+              console.log('pressed');
+            }}>
+            <Box
+              borderRadius={8}
+              mt={'5%'}
+              alignSelf={'center'}
+              height={height * 0.07}
+              width={width * 0.45}
+              alignItems={'center'}
+              justifyContent={'center'}
+              bgColor={'#31006F'}>
+              <Text
+                color={'white'}
+                fontSize={16}
+                lineHeight={20}
+                fontWeight={fontWeights['600']}
+                fontFamily={fonts.NunitoSans['600']}>
+                Continue
+              </Text>
+            </Box>
+          </TouchableOpacity>
+        )}
         <Box h={50} />
       </ScrollView>
       <AlarmModal
