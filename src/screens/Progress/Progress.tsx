@@ -12,28 +12,45 @@ import {
   import NotificationBell from '../../Assets/NotificationBell.svg';
   import ThriveLogo from '../../Assets/images/thrive_logo.svg';
   import {AnimatedCircularProgress} from 'react-native-circular-progress';
+import { activities } from './ProgressData';
 
 const Progress = () => {
     const height = useWindowDimensions().height;
     const width = useWindowDimensions().width;
+    
+    const countMarkedDoneForToday = (dayName) => {
+      return activities
+        .filter(activity => activity.dayName === dayName)
+        .filter(activity => activity.isMarkedDone)
+        .length;
+    };
+    
+    const dayName = new Date().toLocaleDateString('en-US', { weekday: 'long' }); // Get the current day name
+    const markedDoneCountForToday = countMarkedDoneForToday(dayName);
+    
+    console.log(`Number of activities marked as done for ${dayName}:`, markedDoneCountForToday);
     const days = [
-      {value: 60, dayName: 'Sun'},
-      {value: 40, dayName: 'Mon'},
-      {value: 50, dayName: 'Tue'},
-      {value: 35, dayName: 'Wed'},
-      {value: 65, dayName: 'Thu'},
-      {value: 85, dayName: 'Fri'},
-      {value: 70, dayName: 'Sat'},
+      {value: (countMarkedDoneForToday('Sunday')/10)*100 , dayName: 'Sun' , acivitiesDone : countMarkedDoneForToday('Sunday')  },
+      {value: (countMarkedDoneForToday('Monday')/10)*100, dayName: 'Mon' , acivitiesDone : countMarkedDoneForToday('Monday') },
+      {value: (countMarkedDoneForToday('Tuesday')/10)*100, dayName: 'Tue' , acivitiesDone : countMarkedDoneForToday('Tuesday') },
+      {value: (countMarkedDoneForToday('Wednesday')/10)*100, dayName: 'Wed', acivitiesDone : countMarkedDoneForToday('Wednesday') },
+      {value: (countMarkedDoneForToday('Thursday')/10)*100, dayName: 'Thu', acivitiesDone : countMarkedDoneForToday('Thursday') },
+      {value: (countMarkedDoneForToday('Friday')/10)*100, dayName: 'Fri', acivitiesDone : countMarkedDoneForToday('Friday') },
+      {value: (countMarkedDoneForToday('Saturday')/10)*100, dayName: 'Sat' , acivitiesDone : countMarkedDoneForToday('Saturday') },
     ];
+    console.log("acitivitiesDone=>" , days);
+    
     const habitsData = [
-      {name: 'Total Habits', value: 12},
-      {name: 'Habits Followed', value: 5},
+      {name: 'Total Habits', value: 10},
+      {name: 'Habits Followed', value: markedDoneCountForToday},
       {
         name: 'Habits Not Followed',
-        value: 7,
+        value: 10 - markedDoneCountForToday,
       },
     ];
-    const averagePercentage = 70
+    const averagePercentage =  (markedDoneCountForToday/10)*100
+
+    
     const VerticalProgressBar = ({ progress }) => {
       return (
         <View
@@ -53,6 +70,7 @@ const Progress = () => {
               position: 'absolute',
               bottom: 0,
               width: '100%',
+              borderRadius: 12,
               height: `${progress}%`,
               backgroundColor: '#31006F',
             }}
@@ -62,6 +80,7 @@ const Progress = () => {
             style={{
               position: 'absolute',
               bottom: `${progress}%`,
+              
               width: '100%',
               height: `${100 - progress}%`,
               backgroundColor: '#F7F8F8',
