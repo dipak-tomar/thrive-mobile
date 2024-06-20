@@ -7,7 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {ParamListBase, RouteProp} from '@react-navigation/native';
 import {Box, Pressable, Text} from 'native-base';
-import {Platform} from 'react-native';
+import {Alert, Linking, Platform} from 'react-native';
 import HomeIcon from '../Assets/HomeBottomTab.svg';
 import ProfileIcon from '../Assets/ProfileBottomTab.svg';
 import ProgressIcon from '../Assets/ProgressBottomTab.svg';
@@ -26,6 +26,23 @@ type BottomTabNavigationOptions =
       navigation: any;
     }) => RNNavigationOptions)
   | undefined;
+
+  const handleEmailPress = () => {
+    const email = 'gethelp.thrive@gmail.com'; // Replace with your actual email
+    const subject = 'Help Request';
+    const body = 'I need help with...';
+    const url = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (!supported) {
+          Alert.alert('Error', 'Email client is not supported');
+        } else {
+          return Linking.openURL(url);
+        }
+      })
+      .catch((err) => console.error('An error occurred', err));
+  };
 
 /**
  * This Navigator handles the Tabs of the App.
@@ -52,6 +69,7 @@ const Main = () => {
     tabBarIconStyle: {
       marginTop: 8,
     },
+  
 
     tabBarIcon: ({color, size, focused}) => {
       let iconName = '';
@@ -255,7 +273,8 @@ const Main = () => {
             console.log('focus', e.target?.split('-')[0]);
           },
           tabPress: e => {
-            console.log('focus', e.target?.split('-')[0]);
+            e.preventDefault(); // Prevent the default action of navigating to the Profile component
+            handleEmailPress(); // Call the email function
           },
         }}
       />

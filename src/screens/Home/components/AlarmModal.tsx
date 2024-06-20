@@ -1,4 +1,4 @@
-import {Box, Button, HStack, Modal, Switch, Text} from 'native-base';
+import {Box, Button, HStack, Modal, Switch, Text , useToast} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {
   Pressable,
@@ -7,6 +7,10 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import AnalogClock from 'react-native-clock-analog';
+import {TimerPickerModal} from 'react-native-timer-picker';
+//  import LinearGradient from "react-native-linear-gradient"
+// import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
+// import * as Haptics from "expo-haptics"; // for haptic feedback
 // import AnalogClock from 'react-native-analog-clock';
 
 const AlarmModal = ({isModalVisible, closeModal}) => {
@@ -15,7 +19,9 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
   const [isPressed, setIsPressed] = useState(false);
   const height = useWindowDimensions().height;
   const width = useWindowDimensions().width;
-
+  const [showPicker, setShowPicker] = useState(false);
+  const [alarmString, setAlarmString] = useState<string | null>(null);
+ const toast = useToast()
   const days = [
     {day: 'S', dayName: 'Sun'},
     {day: 'M', dayName: 'Mon'},
@@ -26,7 +32,17 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
     {day: 'S', dayName: 'Sat'},
   ];
 
-  const toggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+  const toggleSwitch = () =>{ 
+    
+    setIsSwitchOn(false)
+    
+    toast.show({
+      description: 'Reminder set for the following days',
+      duration: 2000,
+    });
+    
+    
+  };
 
   const handleSelect = (dayName: string) => {
     setSelectedDays(prevSelectedDays =>
@@ -35,6 +51,8 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
         : [...prevSelectedDays, dayName],
     );
   };
+  console.log("alarmString=>" , alarmString?.hours);
+  
 
   return (
     <Modal isOpen={isModalVisible} onClose={closeModal} size="lg">
@@ -124,12 +142,13 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
                 colorSeconds="#FF74E9"
                 borderColor="#0000FF"
                 numberFontSize={20}
-                // hour={hour}
-                // minutes={minute}
-                // seconds={second}
+                hour={alarmString?.hours}
+                minutes={alarmString?.minutes}
+                seconds={alarmString?.seconds}
                 showSeconds
               />
             </Box>
+            <TouchableOpacity onPress={()=> setShowPicker(true)}>
             <HStack
               width={width * 0.68}
               height={height * 0.05}
@@ -149,7 +168,8 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
                   lineHeight={14}
                   fontFamily={'Nunito Sans'}
                   ml={2}>
-                  11:15
+                  {alarmString?.hours ?? '12' } :
+                   {alarmString?.minutes ?? '00' }
                 </Text>
                 <Text
                   fontSize={10}
@@ -168,6 +188,28 @@ const AlarmModal = ({isModalVisible, closeModal}) => {
                 onValueChange={toggleSwitch}
               />
             </HStack>
+            </TouchableOpacity>
+            <TimerPickerModal
+              visible={showPicker}
+              setIsVisible={setShowPicker}
+              onConfirm={pickedDuration => {
+                setAlarmString(pickedDuration);
+                setShowPicker(false);
+              }}
+              modalTitle="Set Reminder"
+              onCancel={() => setShowPicker(false)}
+              closeOnOverlayPress
+              use24HourPicker
+              // Audio={Audio}
+              // supply your own custom click sound asset
+              // clickSoundAsset={require('./assets/custom_click.mp3')}
+              // LinearGradient={LinearGradient}
+              // Haptics={Haptics}
+              styles={{
+                theme: 'light',
+                
+              }}
+            />
           </Box>
         </Modal.Body>
       </Modal.Content>

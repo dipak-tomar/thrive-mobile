@@ -24,7 +24,7 @@ import RNRestart from 'react-native-restart';
 import auth from '@react-native-firebase/auth';
 import {getItem} from '../../config/asyncStorage';
 import {useIsFocused} from '@react-navigation/native';
-import { useWindowDimensions } from 'react-native';
+import { Linking, TouchableOpacity, useWindowDimensions } from 'react-native';
 
 const Profile = () => {
   const [Loading, setLoading] = useState(false);
@@ -216,7 +216,11 @@ const Profile = () => {
             mt={'5%'}>
             Other
           </Text>
-
+          <TouchableOpacity onPress={() => {
+              Linking.openURL(
+                'https://capable-ricotta-490.notion.site/Thrive-Privacy-Policy-24496156f7d04220b093328d3e17a8b2?pvs=4',
+              );
+            }}>
           <HStack justifyContent={'space-between'} mt={'5%'}>
             <HStack ml={'4%'} alignItems={'center'}>
               <Box>
@@ -234,6 +238,7 @@ const Profile = () => {
               <LeftArrow />
             </Box>
           </HStack>
+          </TouchableOpacity>
         </Box>
         <Pressable
           mt={'5%'}
