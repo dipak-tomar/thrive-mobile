@@ -20,6 +20,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import AlarmModal from './components/AlarmModal';
 const Home = () => {
   const [isChecked, setisChecked] = useState(false);
+  const [openReminder, setOpenReminder] = useState(false);
 
   const preferences = [
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
@@ -130,6 +131,7 @@ const Home = () => {
                     fontFamily={fonts.NunitoSans['600']}>
                     {preference}
                   </Text>
+                  <Pressable onPress={()=> setOpenReminder(true)}>
                   <HStack justifyContent={'flex-end'}>
                     <Text
                       color={'#31006F'}
@@ -142,13 +144,14 @@ const Home = () => {
                     </Text>
                     <Icon as={IonIcons} name="alarm-outline" ml={'1%'} />
                   </HStack>
+                  </Pressable>
                 </VStack>
               </TouchableOpacity>
             </HStack>
           );
         })}
       </ScrollView>
-      <AlarmModal isModalVisible={true} />
+      <AlarmModal isModalVisible={openReminder} closeModal={!openReminder} />
     </Box>
   );
 };
