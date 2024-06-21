@@ -84,7 +84,7 @@ const ApplicationNavigator = () => {
       />
 
       <Stack.Navigator
-        // initialRouteName={'Main'}
+        initialRouteName={'Login'}
         screenOptions={{
           headerShown: false,
         }}>

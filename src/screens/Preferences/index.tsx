@@ -98,7 +98,7 @@ const Preference = () => {
     getCurrentUser();
   }, [isFocused]);
 
-  const updateUserByEmail = async () => {
+  const updateUserByEmail = async microHabits => {
     try {
       const querySnapshot = await firestore()
         .collection('users')
@@ -119,6 +119,7 @@ const Preference = () => {
             weight: Math.floor(weightSliderValue),
             medical_condition: medicalCondition,
             schedule: timesOfTheDay,
+            suggested_habbits: microHabits,
           });
         console.log('User document updated:', userDoc.id);
         toast.show({description: 'User details updated!', duration: 2000});
@@ -245,7 +246,7 @@ const Preference = () => {
             'habbitsData',
             JSON.stringify(microHabits),
           );
-          await updateUserByEmail();
+          await updateUserByEmail(microHabits);
           console.log('Data saved to AsyncStorage successfully.');
           setStep(prev => prev + 1);
         } catch (storageError) {

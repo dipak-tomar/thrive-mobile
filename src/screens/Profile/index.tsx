@@ -58,9 +58,11 @@ const Profile = () => {
   const getUserByEmail = async () => {
     setLoading(true);
     try {
+      const userinfo = await getItem('currentUser');
+      console.log('userinfo', userinfo);
       const querySnapshot = await firestore()
         .collection('users')
-        .where('email', '==', 'dipakkumartomar29@gmail.com')
+        .where('email', '==', userinfo?.email)
         .get();
 
       if (!querySnapshot.empty) {

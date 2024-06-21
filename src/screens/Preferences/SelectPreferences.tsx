@@ -1,5 +1,6 @@
 import {
   Box,
+  FlatList,
   HStack,
   Icon,
   Pressable,
@@ -22,6 +23,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import {useIsFocused} from '@react-navigation/native';
 import {Loader} from '../../components/Loader';
 import firestore from '@react-native-firebase/firestore';
+import {getItem} from '../../config/asyncStorage';
 
 const SelectPreferences = () => {
   const [Loading, setLoading] = useState(false);
@@ -30,6 +32,7 @@ const SelectPreferences = () => {
   const width = useWindowDimensions().width;
   const isFocused = useIsFocused();
   const toast = useToast();
+  const [userData, setuserData] = useState({});
   const preferences = [
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
@@ -38,36 +41,36 @@ const SelectPreferences = () => {
   ];
   const [selectedPreferences, setSelectedPreferences] = useState([]);
 
-  useEffect(() => {
-    async function getMicroHabbits() {
-      setLoading(true);
-      try {
-        const habbitsString = await AsyncStorage.getItem('habbitsData');
-        if (habbitsString !== null) {
-          const habbitsInfo = JSON.parse(habbitsString);
-          console.log('habbitsInfo', habbitsInfo);
+  const getUserByEmail = async () => {
+    setLoading(true);
+    try {
+      const userinfo = await getItem('currentUser');
+      console.log('userinfo', userinfo);
 
-          setmicroHabbits(habbitsInfo);
-          console.log(
-            'Data retrieved from AsyncStorage',
+      const querySnapshot = await firestore()
+        .collection('users')
+        .where('email', '==', userinfo?.email)
+        .get();
 
-            microHabbits,
-          );
-        } else {
-          setmicroHabbits([]); // Ensure microHabbits is an array if there's no data
-        }
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000);
-      } catch (error) {
-        console.error('Error retrieving data from AsyncStorage', error);
-        setmicroHabbits([]); // Ensure microHabbits is an array in case of error
-      } finally {
-        setLoading(false);
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0].data();
+        setuserData(userDoc);
+        console.log('User document retrieved:', userDoc);
+      } else {
+        console.log('No user found with this email.');
+        setuserData(null);
       }
+      setLoading(false);
+    } catch (error) {
+      console.error('Error getting user document:', error);
+      setLoading(false);
     }
+  };
 
-    getMicroHabbits();
+  useEffect(() => {
+    if (isFocused) {
+      getUserByEmail();
+    }
   }, [isFocused]);
   const togglePreference = preference => {
     setSelectedPreferences(prevSelected => {
@@ -81,7 +84,7 @@ const SelectPreferences = () => {
     });
   };
 
-  console.log('selected preferences', selectedPreferences);
+  console.log('selected preferences', userData?.suggested_habbits);
 
   const habbitsData = [
     {
@@ -209,7 +212,8 @@ const SelectPreferences = () => {
           mt={'2%'}>
           Hey Aman!👋🏼
         </Text>
-        {microHabbits?.length === 0 && (
+        {userData?.suggested_habbits?.length === 0 ||
+        !userData?.suggested_habbits ? (
           <Box
             height={height * 0.2}
             width={width * 0.6}
@@ -230,95 +234,99 @@ const SelectPreferences = () => {
               No Habbits Found !!
             </Text>
           </Box>
-        )}
-        {microHabbits?.map(preference => {
-          const isChecked = selectedPreferences.some(
-            item => item.action === preference.action,
-          );
-          return (
-            <HStack alignItems={'center'}>
-              <Pressable
-                ml={'3%'}
-                mt={'8%'}
-                onPress={() => togglePreference(preference)}>
-                <Box>
-                  <CheckboxUnChecked width={40} height={40} />
-                  {isChecked && (
-                    <Box
-                      position="absolute"
-                      top={-4}
-                      left={2}
-                      width={40}
-                      height={40}>
-                      <CheckMark />
-                    </Box>
-                  )}
-                </Box>
-              </Pressable>
+        ) : (
+          userData?.suggested_habbits?.map(preference => {
+            const isChecked = selectedPreferences.some(
+              item => item.action === preference.action,
+            );
+            return (
+              <HStack alignItems={'center'}>
+                <Pressable
+                  ml={'3%'}
+                  mt={'8%'}
+                  onPress={() => togglePreference(preference)}>
+                  <Box>
+                    <CheckboxUnChecked width={40} height={40} />
+                    {isChecked && (
+                      <Box
+                        position="absolute"
+                        top={-4}
+                        left={2}
+                        width={40}
+                        height={40}>
+                        <CheckMark />
+                      </Box>
+                    )}
+                  </Box>
+                </Pressable>
 
-              <TouchableOpacity
-                style={{
-                  width: '83%',
-                  backgroundColor: '#F8F8F8',
-                  marginTop: '8%',
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: '#31006F',
-                  padding: 20,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  color={'#31006F'}
-                  fontSize={18}
-                  textAlign={'justify'}
-                  lineHeight={24}
-                  fontWeight={fontWeights['600']}
-                  fontFamily={fonts.NunitoSans['600']}>
-                  {preference.action}
-                </Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    width: '83%',
+                    backgroundColor: '#F8F8F8',
+                    marginTop: '8%',
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#31006F',
+                    padding: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    color={'#31006F'}
+                    fontSize={18}
+                    textAlign={'justify'}
+                    lineHeight={24}
+                    fontWeight={fontWeights['600']}
+                    fontFamily={fonts.NunitoSans['600']}>
+                    {preference.action}
+                  </Text>
+                </TouchableOpacity>
+              </HStack>
+            );
+          })
+        )}
+
+        {userData?.suggested_habbits && (
+          <TouchableOpacity
+            onPress={async () => {
+              await updateUserByEmail();
+              navigate('Main', {});
+            }}
+            style={{
+              // width: width * 0.3,
+              height: width * 0.12,
+              backgroundColor: '#31006F',
+              padding: 12,
+              borderRadius: 100,
+              alignSelf: 'center',
+              justifyContent: 'center',
+              marginTop: '4%',
+              marginBottom: '5%',
+            }}>
+            <HStack
+              alignSelf={'center'}
+              justifyContent={'space-between'}
+              px={'2%'}>
+              <Text
+                fontSize={14}
+                textAlign={'justify'}
+                lineHeight={18}
+                fontWeight={fontWeights['600']}
+                fontFamily={fonts.NunitoSans['600']}
+                color={'white'}>
+                Proceed
+              </Text>
+              <Icon
+                ml={'2%'}
+                as={Feather}
+                size={5}
+                name="arrow-right"
+                color={'#fff'}
+              />
             </HStack>
-          );
-        })}
-        <TouchableOpacity
-          onPress={async () => {
-            await updateUserByEmail();
-            navigate('Main', {});
-          }}
-          style={{
-            // width: width * 0.3,
-            height: width * 0.12,
-            backgroundColor: '#31006F',
-            padding: 12,
-            borderRadius: 100,
-            alignSelf: 'center',
-            justifyContent: 'center',
-            marginTop: '4%',
-            marginBottom: '5%',
-          }}>
-          <HStack
-            alignSelf={'center'}
-            justifyContent={'space-between'}
-            px={'2%'}>
-            <Text
-              fontSize={14}
-              textAlign={'justify'}
-              lineHeight={18}
-              fontWeight={fontWeights['600']}
-              fontFamily={fonts.NunitoSans['600']}
-              color={'white'}>
-              Proceed
-            </Text>
-            <Icon
-              ml={'2%'}
-              as={Feather}
-              size={5}
-              name="arrow-right"
-              color={'#fff'}
-            />
-          </HStack>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        )}
       </ScrollView>
       {Loading ? <Loader /> : null}
     </Box>
