@@ -1,21 +1,21 @@
 export const activities = [
     // Monday
-    {
-      title: 'Morning Yoga',
-      action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
-      suggested_time: '7:00 AM',
-      isMarkedDone: false,
-      dayName: 'Monday',
-      date: new Date(2024, 5, 24)
-    },
-    {
-      title: 'Breathing Exercise',
-      action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
-      suggested_time: '10:00 AM',
-      isMarkedDone: false,
-      dayName: 'Monday',
-      date: new Date(2024, 5, 24)
-    },
+    // {
+    //   title: 'Morning Yoga',
+    //   action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
+    //   suggested_time: '7:00 AM',
+    //   isMarkedDone: false,
+    //   dayName: 'Monday',
+    //   date: new Date(2024, 5, 24)
+    // },
+    // {
+    //   title: 'Breathing Exercise',
+    //   action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
+    //   suggested_time: '10:00 AM',
+    //   isMarkedDone: false,
+    //   dayName: 'Monday',
+    //   date: new Date(2024, 5, 24)
+    // },
     {
       title: 'Nature Walk',
       action: 'Take a 20-minute walk in nature to boost your mood and reduce anxiety.',
@@ -81,22 +81,22 @@ export const activities = [
       date: new Date(2024, 5, 24)
     },
     // Tuesday
-    {
-      title: 'Morning Yoga',
-      action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
-      suggested_time: '7:00 AM',
-      isMarkedDone: false,
-      dayName: 'Tuesday',
-      date: new Date(2024, 5, 25)
-    },
-    {
-      title: 'Breathing Exercise',
-      action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
-      suggested_time: '10:00 AM',
-      isMarkedDone: false,
-      dayName: 'Tuesday',
-      date: new Date(2024, 5, 25)
-    },
+    // {
+    //   title: 'Morning Yoga',
+    //   action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
+    //   suggested_time: '7:00 AM',
+    //   isMarkedDone: false,
+    //   dayName: 'Tuesday',
+    //   date: new Date(2024, 5, 25)
+    // },
+    // {
+    //   title: 'Breathing Exercise',
+    //   action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
+    //   suggested_time: '10:00 AM',
+    //   isMarkedDone: false,
+    //   dayName: 'Tuesday',
+    //   date: new Date(2024, 5, 25)
+    // },
     {
       title: 'Nature Walk',
       action: 'Take a 20-minute walk in nature to boost your mood and reduce anxiety.',
@@ -162,22 +162,22 @@ export const activities = [
       date: new Date(2024, 5, 25)
     },
     // Wednesday
-    {
-      title: 'Morning Yoga',
-      action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
-      suggested_time: '7:00 AM',
-      isMarkedDone: true,
-      dayName: 'Wednesday',
-      date: new Date(2024, 5, 26)
-    },
-    {
-      title: 'Breathing Exercise',
-      action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
-      suggested_time: '10:00 AM',
-      isMarkedDone: true,
-      dayName: 'Wednesday',
-      date: new Date(2024, 5, 26)
-    },
+    // {
+    //   title: 'Morning Yoga',
+    //   action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
+    //   suggested_time: '7:00 AM',
+    //   isMarkedDone: true,
+    //   dayName: 'Wednesday',
+    //   date: new Date(2024, 5, 26)
+    // },
+    // {
+    //   title: 'Breathing Exercise',
+    //   action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
+    //   suggested_time: '10:00 AM',
+    //   isMarkedDone: true,
+    //   dayName: 'Wednesday',
+    //   date: new Date(2024, 5, 26)
+    // },
     {
       title: 'Nature Walk',
       action: 'Take a 20-minute walk in nature to boost your mood and reduce anxiety.',
@@ -243,22 +243,22 @@ export const activities = [
       date: new Date(2024, 5, 26)
     },
     // Thursday
-    {
-      title: 'Morning Yoga',
-      action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
-      suggested_time: '7:00 AM',
-      isMarkedDone: true,
-      dayName: 'Thursday',
-      date: new Date(2024, 5, 27)
-    },
-    {
-      title: 'Breathing Exercise',
-      action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
-      suggested_time: '10:00 AM',
-      isMarkedDone: true,
-      dayName: 'Thursday',
-      date: new Date(2024, 5, 27)
-    },
+    // {
+    //   title: 'Morning Yoga',
+    //   action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
+    //   suggested_time: '7:00 AM',
+    //   isMarkedDone: true,
+    //   dayName: 'Thursday',
+    //   date: new Date(2024, 5, 27)
+    // },
+    // {
+    //   title: 'Breathing Exercise',
+    //   action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
+    //   suggested_time: '10:00 AM',
+    //   isMarkedDone: true,
+    //   dayName: 'Thursday',
+    //   date: new Date(2024, 5, 27)
+    // },
     {
       title: 'Nature Walk',
       action: 'Take a 20-minute walk in nature to boost your mood and reduce anxiety.',
@@ -324,22 +324,22 @@ export const activities = [
       date: new Date(2024, 5, 27)
     },
     // Friday
-    {
-      title: 'Morning Yoga',
-      action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
-      suggested_time: '7:00 AM',
-      isMarkedDone: true,
-      dayName: 'Friday',
-      date: new Date(2024, 5, 28)
-    },
-    {
-      title: 'Breathing Exercise',
-      action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
-      suggested_time: '10:00 AM',
-      isMarkedDone: true,
-      dayName: 'Friday',
-      date: new Date(2024, 5, 28)
-    },
+    // {
+    //   title: 'Morning Yoga',
+    //   action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
+    //   suggested_time: '7:00 AM',
+    //   isMarkedDone: true,
+    //   dayName: 'Friday',
+    //   date: new Date(2024, 5, 28)
+    // },
+    // {
+    //   title: 'Breathing Exercise',
+    //   action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
+    //   suggested_time: '10:00 AM',
+    //   isMarkedDone: true,
+    //   dayName: 'Friday',
+    //   date: new Date(2024, 5, 28)
+    // },
     {
       title: 'Nature Walk',
       action: 'Take a 20-minute walk in nature to boost your mood and reduce anxiety.',
@@ -405,22 +405,22 @@ export const activities = [
       date: new Date(2024, 5, 28)
     },
     // Saturday
-    {
-      title: 'Morning Yoga',
-      action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
-      suggested_time: '7:00 AM',
-      isMarkedDone: true,
-      dayName: 'Saturday',
-      date: new Date(2024, 5, 29)
-    },
-    {
-      title: 'Breathing Exercise',
-      action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
-      suggested_time: '10:00 AM',
-      isMarkedDone: true,
-      dayName: 'Saturday',
-      date: new Date(2024, 5, 29)
-    },
+    // {
+    //   title: 'Morning Yoga',
+    //   action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
+    //   suggested_time: '7:00 AM',
+    //   isMarkedDone: true,
+    //   dayName: 'Saturday',
+    //   date: new Date(2024, 5, 29)
+    // },
+    // {
+    //   title: 'Breathing Exercise',
+    //   action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
+    //   suggested_time: '10:00 AM',
+    //   isMarkedDone: true,
+    //   dayName: 'Saturday',
+    //   date: new Date(2024, 5, 29)
+    // },
     {
       title: 'Nature Walk',
       action: 'Take a 20-minute walk in nature to boost your mood and reduce anxiety.',
@@ -486,22 +486,22 @@ export const activities = [
       date: new Date(2024, 5, 29)
     },
     // Sunday
-    {
-      title: 'Morning Yoga',
-      action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
-      suggested_time: '7:00 AM',
-      isMarkedDone: true,
-      dayName: 'Sunday',
-      date: new Date(2024, 5, 30)
-    },
-    {
-      title: 'Breathing Exercise',
-      action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
-      suggested_time: '10:00 AM',
-      isMarkedDone: false,
-      dayName: 'Sunday',
-      date: new Date(2024, 5, 30)
-    },
+    // {
+    //   title: 'Morning Yoga',
+    //   action: 'Engage in a 15-minute yoga session to start your day with relaxation and mindfulness.',
+    //   suggested_time: '7:00 AM',
+    //   isMarkedDone: true,
+    //   dayName: 'Sunday',
+    //   date: new Date(2024, 5, 30)
+    // },
+    // {
+    //   title: 'Breathing Exercise',
+    //   action: 'Practice deep breathing for 10 minutes to reduce stress and improve mental clarity.',
+    //   suggested_time: '10:00 AM',
+    //   isMarkedDone: false,
+    //   dayName: 'Sunday',
+    //   date: new Date(2024, 5, 30)
+    // },
     {
       title: 'Nature Walk',
       action: 'Take a 20-minute walk in nature to boost your mood and reduce anxiety.',

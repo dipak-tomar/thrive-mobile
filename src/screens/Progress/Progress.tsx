@@ -30,25 +30,25 @@ const Progress = () => {
     
     console.log(`Number of activities marked as done for ${dayName}:`, markedDoneCountForToday);
     const days = [
-      {value: (countMarkedDoneForToday('Sunday')/10)*100 , dayName: 'Sun' , acivitiesDone : countMarkedDoneForToday('Sunday')  },
-      {value: (countMarkedDoneForToday('Monday')/10)*100, dayName: 'Mon' , acivitiesDone : countMarkedDoneForToday('Monday') },
-      {value: (countMarkedDoneForToday('Tuesday')/10)*100, dayName: 'Tue' , acivitiesDone : countMarkedDoneForToday('Tuesday') },
-      {value: (countMarkedDoneForToday('Wednesday')/10)*100, dayName: 'Wed', acivitiesDone : countMarkedDoneForToday('Wednesday') },
-      {value: (countMarkedDoneForToday('Thursday')/10)*100, dayName: 'Thu', acivitiesDone : countMarkedDoneForToday('Thursday') },
-      {value: (countMarkedDoneForToday('Friday')/10)*100, dayName: 'Fri', acivitiesDone : countMarkedDoneForToday('Friday') },
-      {value: (countMarkedDoneForToday('Saturday')/10)*100, dayName: 'Sat' , acivitiesDone : countMarkedDoneForToday('Saturday') },
+      {value: (countMarkedDoneForToday('Sunday')/8)*100 , dayName: 'Sun' , acivitiesDone : countMarkedDoneForToday('Sunday')  },
+      {value: (countMarkedDoneForToday('Monday')/8)*100, dayName: 'Mon' , acivitiesDone : countMarkedDoneForToday('Monday') },
+      {value: (countMarkedDoneForToday('Tuesday')/8)*100, dayName: 'Tue' , acivitiesDone : countMarkedDoneForToday('Tuesday') },
+      {value: (countMarkedDoneForToday('Wednesday')/8)*100, dayName: 'Wed', acivitiesDone : countMarkedDoneForToday('Wednesday') },
+      {value: (countMarkedDoneForToday('Thursday')/8)*100, dayName: 'Thu', acivitiesDone : countMarkedDoneForToday('Thursday') },
+      {value: (countMarkedDoneForToday('Friday')/8)*100, dayName: 'Fri', acivitiesDone : countMarkedDoneForToday('Friday') },
+      {value: (countMarkedDoneForToday('Saturday')/8)*100, dayName: 'Sat' , acivitiesDone : countMarkedDoneForToday('Saturday') },
     ];
     console.log("acitivitiesDone=>" , days);
     
     const habitsData = [
-      {name: 'Total Habits', value: 10},
+      {name: 'Total Habits', value: 8},
       {name: 'Habits Followed', value: markedDoneCountForToday},
       {
         name: 'Habits Not Followed',
-        value: 10 - markedDoneCountForToday,
+        value: 8 - markedDoneCountForToday,
       },
     ];
-    const averagePercentage =  (markedDoneCountForToday/10)*100
+    const averagePercentage =  (markedDoneCountForToday/8)*100
 
     
     const VerticalProgressBar = ({ progress }) => {
