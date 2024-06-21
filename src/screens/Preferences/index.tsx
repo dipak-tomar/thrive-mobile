@@ -159,7 +159,10 @@ const Preference = () => {
           timesOfTheDay,
         any_prior_medical_condition: medicalCondition,
       },
-    });
+      
+    }
+    );
+    console.log("body=>" , body) , age;
 
     setloading(true);
     const habbitsData = [
@@ -418,7 +421,7 @@ const Preference = () => {
                 <Slider
                   style={{width: width * 0.8, height: 40, marginTop: '12%'}}
                   minimumValue={15}
-                  maximumValue={650}
+                  maximumValue={200}
                   step={1}
                   value={weightSliderValue}
                   onValueChange={value => setWeightSliderValue(value)}

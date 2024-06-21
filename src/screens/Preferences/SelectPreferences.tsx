@@ -12,7 +12,7 @@ import React, {useEffect, useState} from 'react';
 import ThriveLogo from '../../Assets/images/thrive_logo.svg';
 import CheckboxChecked from '../../Assets/CheckBoxUnChecked.svg';
 import CheckboxUnChecked from '../../Assets/CheckBoxUnChecked.svg';
-import {Linking, TouchableOpacity, useWindowDimensions} from 'react-native';
+import {ActivityIndicator, Linking, TouchableOpacity, useWindowDimensions} from 'react-native';
 import {fontWeights, fonts} from '../../config/fonts.config';
 import BookOpen from '../../Assets/BookOpen.svg';
 import NotificationBell from '../../Assets/NotificationBell.svg';
@@ -26,13 +26,47 @@ import firestore from '@react-native-firebase/firestore';
 import {getItem} from '../../config/asyncStorage';
 
 const SelectPreferences = () => {
+  interface SuggestedHabit {
+    title: string;
+    action: string;
+    suggested_time: string;
+  }
+  
+  interface UserData {
+    age: string;
+    app_key: string;
+    email: string;
+    fullName: string;
+    gender: string;
+    goal: string[];
+    habit: string[];
+    height: number;
+    medical_condition: string;
+    schedule: string;
+    suggested_habbits: SuggestedHabit[];
+    weight: number;
+  }
+  const initialUserData: UserData = {
+    age: "",
+    app_key: "",
+    email: "",
+    fullName: "",
+    gender: "",
+    goal: [],
+    habit: [],
+    height: 0,
+    medical_condition: "",
+    schedule: "",
+    suggested_habbits: [],
+    weight: 0
+  };
   const [Loading, setLoading] = useState(false);
   const [microHabbits, setmicroHabbits] = useState([]);
   const height = useWindowDimensions().height;
   const width = useWindowDimensions().width;
   const isFocused = useIsFocused();
   const toast = useToast();
-  const [userData, setuserData] = useState({});
+  const [userData, setuserData] = useState<UserData>(initialUserData);
   const preferences = [
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
     'Practice deep breathing exercises for 10 minutes before dinner to help manage stress and improve blood sugar levels.',
@@ -53,8 +87,9 @@ const SelectPreferences = () => {
         .get();
 
       if (!querySnapshot.empty) {
-        const userDoc = querySnapshot.docs[0].data();
-        setuserData(userDoc);
+        setLoading(true);
+        const userDoc = await querySnapshot.docs[0].data();
+         setuserData(userDoc);
         console.log('User document retrieved:', userDoc);
       } else {
         console.log('No user found with this email.');
@@ -151,7 +186,7 @@ const SelectPreferences = () => {
           suggested_habbits: habbitsData,
           selected_habbits: selectedPreferences,
         });
-        console.log('User document updated:', userDoc.id);
+        console.log('User document updated:', userDoc);
         toast.show({description: 'User details updated!', duration: 2000});
         setLoading(false);
       } else {
@@ -167,7 +202,26 @@ const SelectPreferences = () => {
       console.error('Error updating user document:', error);
     }
   };
-
+  // if (Loading) {
+  //   return <ActivityIndicator size="large" color="#0000ff" />;
+  // }
+  // if (!userData || !Array.isArray(userData?.suggested_habbits)) {
+  //   return <Text>No suggested habits available.</Text>;
+  // }
+  if (!userData || userData?.suggested_habbits === undefined || userData?.suggested_habbits?.length === 0  ) {
+    return (
+      <Box safeArea bgColor={'#F6F0FF'} flex={1} mb={'16%'}>
+        <Text
+          color={'#31006F'}
+          fontSize={22}
+          ml={'4%'}
+          alignSelf={'center'}
+          mt={'2%'}>
+          Loading...
+        </Text>
+      </Box>
+    );
+  }
   return (
     <Box safeArea bgColor={'#F6F0FF'} flex={1}>
       <HStack

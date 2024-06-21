@@ -219,6 +219,7 @@ const Home = () => {
         </Text>
         {userData?.selected_habbits?.length === 0 ||
           (!userData?.selected_habbits && (
+            <Box>
             <Box
               height={height * 0.2}
               width={width * 0.6}
@@ -238,6 +239,30 @@ const Home = () => {
                 fontFamily={fonts.NunitoSans['600']}>
                 No Habbits Found !!
               </Text>
+            </Box>
+            <TouchableOpacity
+            onPress={() => {
+              navigate('Preference' , {})
+            }}>
+            <Box
+              borderRadius={8}
+              mt={'5%'}
+              alignSelf={'center'}
+              height={height * 0.07}
+              width={width * 0.45}
+              alignItems={'center'}
+              justifyContent={'center'}
+              bgColor={'#31006F'}>
+              <Text
+                color={'white'}
+                fontSize={16}
+                lineHeight={20}
+                fontWeight={fontWeights['600']}
+                fontFamily={fonts.NunitoSans['600']}>
+                Add Habits
+              </Text>
+            </Box>
+          </TouchableOpacity>
             </Box>
           ))}
         {userData?.selected_habbits?.map(preference => {
